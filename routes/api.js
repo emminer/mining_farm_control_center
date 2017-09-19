@@ -11,8 +11,7 @@ router.get('/rigs/:rigname', function(req, res, next) {
   }
 
   rig = rig[0];
-  let pool = config.pools.filter(p => p.name === rig.pool)[0];
-  res.send(`${rig.coin} ${pool.address} ${pool.miner}`);
+  res.send(`${rig.coin} ${rig.pool.address} ${rig.pool.miner}`);
 });
 
 module.exports = router;
