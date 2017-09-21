@@ -4,11 +4,14 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var ApiError = require('./routes/apiError');
 
+var ApiError = require('./routes/apiError');
 var index = require('./routes/index');
 var users = require('./routes/users');
 var api = require('./routes/api');
+
+var monitor = require('./rig_monitor');
+monitor.start();
 
 var app = express();
 
