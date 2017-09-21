@@ -11,7 +11,16 @@ const PoolError = require('./pools/poolError');
 const RIGS = JSON.parse(JSON.stringify(config.rigs));//deep copy
 const TRUN_ON_QUEUE = [];
 
+function start() {
+  return Promise.resolve().then(() => {
+    return checkRigs().then(() => {
+      return Promise.delay(config.check_rigs_time_minutes * 60 * 1000).then(start);
+    });
+  });
+}
+
 function checkRigs() {
+  logger.info('=============GONNA CHECK RIGS');
   return checkPing(RIGS).then(({ reachable, unreachable }) => {
     let now = moment();
     unreachable.forEach(rig => {
@@ -27,7 +36,7 @@ function checkRigs() {
       rig.lastAction = {action: 'reset', reason: 'ping'};
     });
     reachable.forEach(rig => {
-      rig.startedAt = rig.startedAt || now.subtract(2, 'hours');
+      rig.startedAt = rig.startedAt || now;
     });
     return checkPools(reachable).then(rigsFromPool => {
       now = moment();
@@ -170,4 +179,4 @@ function getDisplayName(rig) {
   return `rig ${rig.name} ${rig.ip}`;
 }
 
-module.exports = { checkRigs };
+module.exports = { start, checkRigs };
