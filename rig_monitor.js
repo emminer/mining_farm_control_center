@@ -83,9 +83,16 @@ function checkRigs() {
       });
       logRigs();
 
-/*
-      //start, restart
-      const rigGPIO = require('./rig');
+      const rigGPIO = process.env.NODE_ENV === 'production' ? require('./rig') : {
+        startup: function(pin){
+          logger.info(`GPIO startups pin ${pin}`);
+          return Promise.resolve('');
+        },
+        restart: function(pin){
+          logger.info(`GPIO restarts pin ${pin}`);
+          return Promise.resolve('');
+        }
+      };
       return Promise.mapSeries(startups, rig => {
         logger.warn(`starting rig ${rig.name} ${rig.ip}`);
         return rigGPIO.startup(rig.pin).then(() => {
@@ -103,7 +110,6 @@ function checkRigs() {
           });
         });
       });
-      //*/
     });
   });
 }
