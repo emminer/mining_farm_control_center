@@ -4,23 +4,29 @@ var _ = require('lodash');
 
 const logger = require('./logger');
 const ping = require('./ping');
+const gpu = require('./gpu');
 const config = require('./config');
 const poolFactory = require('./pools/factory');
 const PoolError = require('./pools/poolError');
 
 const RIGS = JSON.parse(JSON.stringify(config.rigs));//deep copy
 const TRUN_ON_QUEUE = [];
+const CHECK_GPU_INTERVAL_MINUTES = 30;
+let lastCheckGpuTime = moment().subtract(1, 'days');
 
 function start() {
   return Promise.resolve().then(() => {
-    return checkRigs().then(() => {
+    let now = moment();
+    let checkGpu = lastCheckGpuTime.isBefore(now.subtract(CHECK_GPU_INTERVAL_MINUTES, 'minutes'));
+    lastCheckGpuTime = now;
+    return checkRigs(checkGpu).then(() => {
       return Promise.delay(config.check_rigs_time_minutes * 60 * 1000).then(start);
     });
   });
 }
 
-function checkRigs() {
-  logger.info('=============GONNA CHECK RIGS');
+function checkRigs(checkGpu) {
+  logger.info('=============GONNA CHECK RIGS' + (checkGpu ? ' WITH GPU' : ''));
   return checkPing(RIGS).then(({ reachable, unreachable }) => {
     let now = moment();
     unreachable.forEach(rig => {
@@ -90,32 +96,62 @@ function checkRigs() {
           logger.info(`rig ${rig.name} ${rig.ip} is running.`);
         }
       });
-      logRigs();
 
-      const rigGPIO = process.env.NODE_ENV === 'production' ? require('./rig') : {
-        startup: function(pin){
-          logger.info(`GPIO startups pin ${pin}`);
-          return Promise.resolve('');
-        },
-        restart: function(pin){
-          logger.info(`GPIO restarts pin ${pin}`);
-          return Promise.resolve('');
-        }
-      };
-      return Promise.mapSeries(startups, rig => {
-        logger.warn(`starting rig ${rig.name} ${rig.ip}`);
-        return rigGPIO.startup(rig.pin).then(() => {
-          logger.warn(`rig ${rig.name} ${rig.ip} was started.`);
-          rig.startedAt = rig.lastAction.time = moment();
-          return Promise.delay(1000);
+      let gpuPromise;
+      if (checkGpu) {
+        gpuPromise = Promise.mapSeries(reachable, rig => {
+          return gpu(rig.ip).catch((gpuErr) => {
+            if (rig.lastAction.action !== 'reset') {
+              rig.lastAction.action = 'reset';
+              if (gpuErr instanceof Promise.TimeoutError) {
+                rig.lastAction.reason = 'nvidia-smi hangs';
+              } else if (gpuErr.code === 'ECONNREFUSED') {
+                rig.lastAction.reason = 'ECONNREFUSED';
+              } else {
+                rig.lastAction.reason = `nvidia-smi error, code: ${gpuErr.sshExitCode}, stderr: ${gpuErr.stderr}`;
+              }
+            };
+            return null;
+          });
         });
-      }).then(() => {
-        return Promise.mapSeries(resets, rig => {
-          logger.warn(`reseting rig ${rig.name} ${rig.ip}`);
-          return rigGPIO.restart(rig.pin).then(() => {
-            logger.warn(`rig ${rig.name} ${rig.ip} was resetted.`);
+      } else {
+        gpuPromise = Promise.resolve([]);
+      }
+
+      return gpuPromise.then(rigsWithGpu => {
+        rigsWithGpu.forEach((withGpu, index) => {
+          if (withGpu !== null) {
+            reachable[index].gpu = withGpu;
+          }
+        })
+        logRigs();
+        //TODO: report rigs to server.
+
+        const rigGPIO = process.env.NODE_ENV === 'production' ? require('./rig') : {
+          startup: function(pin){
+            logger.info(`GPIO startups pin ${pin}`);
+            return Promise.resolve('');
+          },
+          restart: function(pin){
+            logger.info(`GPIO restarts pin ${pin}`);
+            return Promise.resolve('');
+          }
+        };
+        return Promise.mapSeries(startups, rig => {
+          logger.warn(`starting rig ${rig.name} ${rig.ip}`);
+          return rigGPIO.startup(rig.pin).then(() => {
+            logger.warn(`rig ${rig.name} ${rig.ip} was started.`);
             rig.startedAt = rig.lastAction.time = moment();
             return Promise.delay(1000);
+          });
+        }).then(() => {
+          return Promise.mapSeries(resets, rig => {
+            logger.warn(`reseting rig ${rig.name} ${rig.ip}`);
+            return rigGPIO.restart(rig.pin).then(() => {
+              logger.warn(`rig ${rig.name} ${rig.ip} was resetted.`);
+              rig.startedAt = rig.lastAction.time = moment();
+              return Promise.delay(1000);
+            });
           });
         });
       });
