@@ -1,6 +1,7 @@
 const moment = require('moment');
 const Promise = require('bluebird');
-var _ = require('lodash');
+const _ = require('lodash');
+const Table = require('easy-table');
 
 const logger = require('./logger');
 const ping = require('./ping');
@@ -213,7 +214,7 @@ function logRigs() {
     let hashrate = rig.hashrate ? `${rig.hashrate.current}${rig.hashrate.unit}` : 0;
     logger.info(`${name} action: ${lastAction}, hashrate: ${hashrate}`);
     if (rig.gpu) {
-      logger.info('gpu:', rig.gpu);
+      logger.info(Table.print(rig.gpu));
     }
   });
 }

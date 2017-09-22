@@ -5,10 +5,10 @@ const query = 'index,temperature.gpu,fan.speed,utilization.gpu';
 function parseLine(data) {
   const arr = data.split(',');
   return {
-    index: +(arr[0]),
+    i: +(arr[0]),
     temp: +(arr[1]),
     fan: +(arr[2]),
-    utilization: +(arr[3]),
+    util: +(arr[3]),
   };
 }
 
