@@ -35,8 +35,8 @@ function checkRigs(checkGpu) {
         return;
       }
 
-      if (isStarting(rig)) {
-        rig.lastAction = {action: 'recheck_starting', reason: 'ping', time: now};
+      if (isBooting(rig)) {
+        rig.lastAction = {action: 'recheck_booting', reason: 'ping', time: now};
         return;
       }
       rig.lastAction = {action: 'reset', reason: 'ping'};
@@ -198,8 +198,12 @@ function checkPools(rigs){
   })
 }
 
+function isBooting(rig) {
+  return rig.startedAt && moment().subtract(5, 'minutes').isBefore(rig.startedAt);
+}
+
 function isStarting(rig) {
-  return rig.startedAt && moment().subtract(10, 'minutes').isBefore(rig.startedAt);
+  return rig.startedAt && moment().subtract(15, 'minutes').isBefore(rig.startedAt);
 }
 
 function logRigs() {
