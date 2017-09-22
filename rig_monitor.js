@@ -55,7 +55,7 @@ function checkRigs(checkGpu) {
             if (isStarting(rig)){
               rig.lastAction = {action: 'recheck_starting', reason: 'hashrate0', time: now};
             } else {
-              rig.lastAction = {action: 'reset', reason: 'hahsrate0'};
+              rig.lastAction = {action: 'reset', reason: 'hashrate0'};
             }
           } else if (!fromPool.lastSeen) {
             if (isStarting(rig)){
