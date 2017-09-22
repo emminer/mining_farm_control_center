@@ -214,7 +214,7 @@ function logRigs() {
     let hashrate = rig.hashrate ? `${rig.hashrate.current}${rig.hashrate.unit}` : 0;
     logger.info(`${name} action: ${lastAction}, hashrate: ${hashrate}`);
     if (rig.gpu) {
-      logger.info(Table.print(rig.gpu));
+      logger.info('gpu:\n' + Table.print(rig.gpu));
     }
   });
 }
