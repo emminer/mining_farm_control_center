@@ -219,7 +219,7 @@ function logRigs() {
         temp: g.temp + '°C',
         fan: g.fan + '%',
         util: g.util,
-      })));
+      }))));
     }
   });
 }
