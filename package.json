@@ -21,6 +21,7 @@
     "request-promise": "^4.2.1",
     "rpio": "^0.9.17",
     "serve-favicon": "~2.3.2",
+    "simple-ssh": "^1.0.0",
     "winston": "^2.3.1"
   }
 }
