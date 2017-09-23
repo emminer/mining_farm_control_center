@@ -18,7 +18,7 @@ let lastCheckGpuTime = moment().subtract(1, 'days');
 function start() {
   return Promise.resolve().then(() => {
     let now = moment();
-    let checkGpu = lastCheckGpuTime.isBefore(now.subtract(CHECK_GPU_INTERVAL_MINUTES, 'minutes'));
+    let checkGpu = lastCheckGpuTime.isBefore(now.clone().subtract(CHECK_GPU_INTERVAL_MINUTES, 'minutes'));
     lastCheckGpuTime = now;
     return checkRigs(checkGpu).then(() => {
       return Promise.delay(config.check_rigs_time_minutes * 60 * 1000).then(start);
@@ -64,7 +64,7 @@ function checkRigs(checkGpu) {
             } else {
               rig.lastAction = {action: 'reset', reason: 'lastSeenNull'};
             }
-          } else if (now.subtract(20, 'minutes').isAfter(fromPool.lastSeen)) {
+          } else if (now.clone().subtract(20, 'minutes').isAfter(fromPool.lastSeen)) {
             if (isStarting(rig)){
               rig.lastAction = {action: 'recheck_starting', reason: 'longTimeNoSee', time: now};
             } else {
