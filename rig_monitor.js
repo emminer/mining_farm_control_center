@@ -182,7 +182,7 @@ function checkPools(rigs){
   let grouped = _.groupBy(rigs, rig => rig.pool.name);
   let pools = Object.keys(grouped);
 
-  return Promise.map(pools, pool => {
+  return Promise.mapSeries(pools, pool => {
     let miner = grouped[pool][0].pool.miner;
     return poolFactory(pool)(miner).catch(err => {
       logger.error(`pool: ${pool}, `, err.message);
