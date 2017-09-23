@@ -70,7 +70,7 @@ function checkRigs(checkGpu) {
             } else {
               rig.lastAction = {action: 'reset', reason: 'longTimeNoSee'};
             }
-          } else if (fromPool.hashrate.current <= rig.min_hashrate && now.subtract(1, 'hours').isAfter(rig.startedAt)) {
+          } else if (fromPool.hashrate.current <= rig.min_hashrate && now.clone().subtract(1, 'hours').isAfter(rig.startedAt)) {
             rig.hashrate = fromPool.hashrate;
             rig.lastAction = {action: 'reset', reason: 'lowHashrate'};
           } else {
@@ -185,7 +185,7 @@ function checkPools(rigs){
   return Promise.map(pools, pool => {
     let miner = grouped[pool][0].pool.miner;
     return poolFactory(pool)(miner).catch(err => {
-      logger.error(`pool: ${pool}, `, err);
+      logger.error(`pool: ${pool}, `, err.message);
       if (err instanceof PoolError) {
         return grouped[pool].map(r => {
           return {name: r.name, poolError: err};
