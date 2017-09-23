@@ -7,8 +7,8 @@ module.exports = function(endpoint, unit, hashrateHandler){
   return function(miner) {
     const url = `${endpoint}/miner/${miner}/workers`;
     return get(url).then(resp => {
-      if (resp.status === 'OK' && resp.data) {
-        return resp.data.map(worker => {
+      if (resp.status === 'OK') {
+        return (resp.data || []).map(worker => {
           return {
             name: worker.worker,
             lastSeen: worker.lastSeen ? moment.unix(worker.lastSeen) : null,
