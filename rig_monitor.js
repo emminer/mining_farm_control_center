@@ -9,7 +9,6 @@ const gpu = require('./gpu');
 const config = require('./config');
 const poolFactory = require('./pools/factory');
 const PoolError = require('./pools/poolError');
-const delayWithProgress = require('./delay');
 
 const RIGS = JSON.parse(JSON.stringify(config.rigs));//deep copy
 const TRUN_ON_QUEUE = [];
@@ -22,7 +21,7 @@ function start() {
     let checkGpu = lastCheckGpuTime.isBefore(now.clone().subtract(CHECK_GPU_INTERVAL_MINUTES, 'minutes'));
     lastCheckGpuTime = now;
     return checkRigs(checkGpu).then(() => {
-      return delayWithProgress(config.check_rigs_time_minutes * 60).then(start);
+      return Promise.delay(config.check_rigs_time_minutes * 60 * 1000).then(start);
     });
   });
 }
