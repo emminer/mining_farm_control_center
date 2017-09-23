@@ -108,22 +108,22 @@ function checkRigs(checkGpu) {
                 rig.lastAction.reason = 'nvidia-smi hangs';
               } else if (gpuErr.code === 'ECONNREFUSED') {
                 rig.lastAction.reason = 'ECONNREFUSED';
-              } else {
+              } else if (gpuErr.sshExitCode !== 0) {
                 rig.lastAction.reason = `nvidia-smi error, code: ${gpuErr.sshExitCode}, stderr: ${gpuErr.stderr}`;
+              } else {
+                logger.error('nvidia-smi error, unknown: ', gpuErr);
               }
             };
             return null;
           });
         });
       } else {
-        gpuPromise = Promise.resolve([]);
+        gpuPromise = Promise.resolve(reachable.map(r => null));
       }
 
       return gpuPromise.then(rigsWithGpu => {
         rigsWithGpu.forEach((withGpu, index) => {
-          if (withGpu !== null) {
-            reachable[index].gpu = withGpu;
-          }
+          reachable[index].gpu = withGpu;
         })
         logRigs();
         //TODO: report rigs to server.
