@@ -6,13 +6,14 @@ const Promise = require('bluebird');
 
 const CONNECTION_TIMEOUT = 3000;
 const RUN_TIMEOUT = 5000;
+const KEY = fs.readFileSync(path.join(os.homedir(), '.ssh/id_rsa'));
 
 module.exports = function(host, user, command) {
   let ssh = new SSH({
     host,
     user,
     timeout: CONNECTION_TIMEOUT,
-    key: fs.readFileSync(path.join(os.homedir(), '.ssh/id_rsa')),
+    key: KEY,
   });
 
   return new Promise((resolve, reject) => {
