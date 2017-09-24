@@ -178,10 +178,10 @@ function checkRigs(checkGpu) {
 
 function exit(cb) {
   logger.warn('app is exiting...');
-  rigs = RIGS.map(rig => {
+  rigs = RIGS.map(rig => ({
     name: rig.name,
     startedAt: rig.startedAt,
-  });
+  }));
   require('fs').writeFile('snapshot.json', JSON.stringify({
     time: moment(),
     rigs,
