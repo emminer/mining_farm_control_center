@@ -19,7 +19,10 @@ function start() {
   return Promise.resolve().then(() => {
     let now = moment();
     let checkGpu = lastCheckGpuTime.isBefore(now.clone().subtract(CHECK_GPU_INTERVAL_MINUTES, 'minutes'));
-    lastCheckGpuTime = now;
+    if (checkGpu) {
+      lastCheckGpuTime = now;
+    }
+    
     return checkRigs(checkGpu).then(() => {
       return Promise.delay(config.check_rigs_time_minutes * 60 * 1000).then(start);
     });
