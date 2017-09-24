@@ -12,6 +12,11 @@ var api = require('./routes/api');
 
 var monitor = require('./rig_monitor');
 monitor.start();
+process.on('SIGINT', function() {
+  monitor.exit((err) => {
+    process.exit(err ? 1 : 0);
+  });
+});
 
 var app = express();
 

@@ -11,6 +11,19 @@ const poolFactory = require('./pools/factory');
 const PoolError = require('./pools/poolError');
 
 const RIGS = JSON.parse(JSON.stringify(config.rigs));//deep copy
+let snapshot;
+try {
+  snapshot = require('./snapshot.json');
+} catch (e) {}
+if (snapshot && snapshot.time && moment(snapshot.time).add(5, 'minutes').isAfter(moment())) {
+  RIGS.forEach(rig => {
+    let rig2 = _.find(snapshot.rigs, r => r.name === rig.name);
+    if (rig2) {
+      rig.startedAt = moment(rig2.startedAt);
+    }
+  });
+  logger.info('RIGS are restored from snapshot.');
+}
 const TRUN_ON_QUEUE = [];
 const CHECK_GPU_INTERVAL_MINUTES = 30;
 let lastCheckGpuTime = moment().subtract(1, 'days');
@@ -22,7 +35,7 @@ function start() {
     if (checkGpu) {
       lastCheckGpuTime = now;
     }
-    
+
     return checkRigs(checkGpu).then(() => {
       return Promise.delay(config.check_rigs_time_minutes * 60 * 1000).then(start);
     });
@@ -163,6 +176,18 @@ function checkRigs(checkGpu) {
   });
 }
 
+function exit(cb) {
+  logger.warn('app is exiting...');
+  rigs = RIGS.map(rig => {
+    name: rig.name,
+    startedAt: rig.startedAt,
+  });
+  require('fs').writeFile('snapshot.json', JSON.stringify({
+    time: moment(),
+    rigs,
+  }), cb);
+}
+
 function checkPing(rigs){//return reachable and unreachable rigs
   return ping(rigs.map(r => r.ip)).then(result => {
     let reachable = [];
@@ -231,4 +256,4 @@ function getDisplayName(rig) {
   return `rig ${rig.name} ${rig.ip}`;
 }
 
-module.exports = { start, checkRigs };
+module.exports = { start, checkRigs, exit };
