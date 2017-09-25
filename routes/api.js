@@ -26,7 +26,7 @@ router.get('/rigs/:rigname', function(req, res, next) {
   res.send(`${rig.coin} ${rig.pool.address} ${rig.pool.miner}`);
 });
 
-router.get('/rigs/:rigname/shutdown', auth, function(req, res, next) {
+router.post('/rigs/:rigname/shutdown', auth, function(req, res, next) {
   let name = req.params.rigname;
   let rig = _.find(monitor.RIGS, r => r.name === name);
   if (!rig) {
@@ -36,7 +36,7 @@ router.get('/rigs/:rigname/shutdown', auth, function(req, res, next) {
   rigAction(res, next, rigGPIO.shutdown(rig.pin));
 });
 
-router.get('/rigs/:rigname/startup', auth, function(req, res, next) {
+router.post('/rigs/:rigname/startup', auth, function(req, res, next) {
   let name = req.params.rigname;
   let rig = _.find(monitor.RIGS, r => r.name === name);
   if (!rig) {
@@ -46,7 +46,7 @@ router.get('/rigs/:rigname/startup', auth, function(req, res, next) {
   rigAction(res, next, rigGPIO.startup(rig.pin));
 });
 
-router.get('/rigs/:rigname/reset', auth, function(req, res, next) {
+router.post('/rigs/:rigname/reset', auth, function(req, res, next) {
   let name = req.params.rigname;
   let rig = _.find(monitor.RIGS, r => r.name === name);
   if (!rig) {
