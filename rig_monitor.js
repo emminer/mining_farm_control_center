@@ -54,9 +54,9 @@ function start() {
 }
 
 function checkRigs(checkGpu) {
-
   logger.info('=============GONNA CHECK RIGS' + (checkGpu ? ' WITH GPU' : ''));
-  return checkPing(RIGS).then(({ reachable, unreachable }) => {
+  let onlineRIGS = RIGS.filter(r => !r.offline);
+  return checkPing(onlineRIGS).then(({ reachable, unreachable }) => {
     let now = moment();
     unreachable.forEach(rig => {
       if (!rig.lastAction) {
@@ -116,7 +116,7 @@ function checkRigs(checkGpu) {
 
       let startups = [];
       let resets = [];
-      RIGS.forEach(rig => {
+      onlineRIGS.forEach(rig => {
         if (rig.lastAction.action === 'startup') {
           startups.push(rig);
         } else if (rig.lastAction.action === 'reset') {
@@ -252,10 +252,11 @@ function isStarting(rig) {
 
 function logRigs() {
   RIGS.forEach(rig => {
+    let status = rig.offline ? 'offline' : 'online';
     let name = getDisplayName(rig);
     let lastAction = rig.lastAction ? `${rig.lastAction.action}-${rig.lastAction.reason || ''}` : 'unknown';
     let hashrate = rig.hashrate ? `${rig.hashrate.current}${rig.hashrate.unit}` : 0;
-    logger.info(`${name} action: ${lastAction}, hashrate: ${hashrate}`);
+    logger.info(`${name} action: ${lastAction}, hashrate: ${hashrate} ${status}`);
     if (rig.gpu) {
       logger.info('gpu:\n' + Table.print(rig.gpu.map(g => ({
         i: g.index,

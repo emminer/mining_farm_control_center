@@ -9,8 +9,14 @@ const users = {};
 users[config.api.user] = config.api.password;
 const auth = basicAuth({
   users,
-  challenge: true,
+  unauthorizedResponse: getUnauthorizedResponse,
 });
+
+function getUnauthorizedResponse(req) {
+  return req.auth ?
+      ('Credentials ' + req.auth.user + ':' + req.auth.password + ' rejected') :
+      'No credentials provided';
+}
 
 const monitor = require('../rig_monitor');
 const rigGPIO = require('../rigBuilder')();
@@ -57,10 +63,24 @@ router.post('/rigs/:rigname/reset', auth, function(req, res, next) {
 });
 
 router.post('/rigs/:rigname/online', auth, function(req, res, next) {
+  let name = req.params.rigname;
+  let rig = _.find(monitor.RIGS, r => r.name === name);
+  if (!rig) {
+    return res.status(404).send('rig not found.');
+  }
+  rig.offline = false;
+  rig.lastAction = null;
+  rig.startedAt = null;
   res.send('OK');
 });
 
 router.post('/rigs/:rigname/offline', auth, function(req, res, next) {
+  let name = req.params.rigname;
+  let rig = _.find(monitor.RIGS, r => r.name === name);
+  if (!rig) {
+    return res.status(404).send('rig not found.');
+  }
+  rig.offline = true;
   res.send('OK');
 });
 
