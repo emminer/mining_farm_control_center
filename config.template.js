@@ -5,6 +5,10 @@ const miningpoolhub = {
   miner: 'mph_user'
 };
 const check_rigs_time_minutes = 5;
+const api = {
+  user: 'alice',
+  password: 'wieru87fsx',
+}
 
 const rigs = [
   {name: 'nv100', ip: '192.168.1.100', pin: '8', coin: 'ETH', pool: 'ethermine', min_hashrate: 1800},
@@ -25,6 +29,7 @@ const pools = [
 
 module.exports = {
   check_rigs_time_minutes,
+  api,
   rigs: rigs.map(rig => {
     rig.pool = pools.filter(p => p.name === rig.pool)[0];
     rig.status = 'unknown';
