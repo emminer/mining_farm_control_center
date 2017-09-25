@@ -9,6 +9,7 @@ const gpu = require('./gpu');
 const config = require('./config');
 const poolFactory = require('./pools/factory');
 const PoolError = require('./pools/poolError');
+const rigBuilder = require('./rigBuilder');
 
 const RIGS = JSON.parse(JSON.stringify(config.rigs));//deep copy
 let snapshot;
@@ -27,9 +28,15 @@ if (snapshot && snapshot.time && moment(snapshot.time).add(5, 'minutes').isAfter
 const TRUN_ON_QUEUE = [];
 const CHECK_GPU_INTERVAL_MINUTES = 30;
 let lastCheckGpuTime = moment().subtract(1, 'days');
+let locker = false;
 
 function start() {
   return Promise.resolve().then(() => {
+    if (!lock()) {
+      logger.info('locked, delay 15 seconds');
+      return Promise.delay(15 * 1000).then(start);
+    }
+
     let now = moment();
     let checkGpu = lastCheckGpuTime.isBefore(now.clone().subtract(CHECK_GPU_INTERVAL_MINUTES, 'minutes'));
     if (checkGpu) {
@@ -37,12 +44,17 @@ function start() {
     }
 
     return checkRigs(checkGpu).then(() => {
+      unlock();
       return Promise.delay(config.check_rigs_time_minutes * 60 * 1000).then(start);
+    }, (err) => {
+      logger.error(err);
+      unlock();
     });
   });
 }
 
 function checkRigs(checkGpu) {
+
   logger.info('=============GONNA CHECK RIGS' + (checkGpu ? ' WITH GPU' : ''));
   return checkPing(RIGS).then(({ reachable, unreachable }) => {
     let now = moment();
@@ -144,16 +156,7 @@ function checkRigs(checkGpu) {
         logRigs();
         //TODO: report rigs to server.
 
-        const rigGPIO = process.env.NODE_ENV === 'production' ? require('./rig') : {
-          startup: function(pin){
-            logger.info(`GPIO startups pin ${pin}`);
-            return Promise.resolve('');
-          },
-          restart: function(pin){
-            logger.info(`GPIO restarts pin ${pin}`);
-            return Promise.resolve('');
-          }
-        };
+        const rigGPIO = rigBuilder();
         return Promise.mapSeries(startups, rig => {
           logger.warn(`starting rig ${rig.name} ${rig.ip}`);
           return rigGPIO.startup(rig.pin).then(() => {
@@ -186,6 +189,18 @@ function exit(cb) {
     time: moment(),
     rigs,
   }), cb);
+}
+
+function lock() {
+  if (locker) {
+    return false;
+  }
+
+  return locker = true;
+}
+
+function unlock() {
+  locker = false;
 }
 
 function checkPing(rigs){//return reachable and unreachable rigs
@@ -256,4 +271,4 @@ function getDisplayName(rig) {
   return `rig ${rig.name} ${rig.ip}`;
 }
 
-module.exports = { start, checkRigs, exit };
+module.exports = { RIGS, start, checkRigs, exit, lock, unlock };
