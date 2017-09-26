@@ -181,7 +181,7 @@ function checkRigs(checkGpu) {
 
 function exit(cb) {
   logger.warn('app is exiting...');
-  rigs = RIGS.map(rig => ({
+  rigs = RIGS.filter(rig => !rig.offline).map(rig => ({
     name: rig.name,
     startedAt: rig.startedAt,
   }));
