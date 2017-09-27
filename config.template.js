@@ -1,8 +1,10 @@
 const suprnova = {
   miner: 'suprnova_user'
+  apikey: 'api_key',
 };
 const miningpoolhub = {
-  miner: 'mph_user'
+  miner: 'mph_user',
+  apikey: 'api_key',
 };
 const check_rigs_time_minutes = 5;
 const api = {
@@ -22,7 +24,7 @@ const pools = [
   {name: 'flypool_zcash', miner: 't1JCUbGtCRCkbegXcLWzq3uYKmrLa2PGVco', address: 'cn1-zcash.flypool.org:3333'},
   {name: 'suprnova_sigt', miner: suprnova.miner, address: 'stratum+tcp://sigt.suprnova.cc:7106'},
   {name: 'suprnova_lbry', miner: suprnova.miner, address: 'stratum+tcp://lbry.suprnova.cc:6256'},
-  {name: 'miningpoolhub_skein', miner: miningpoolhub.miner, address: 'stratum+tcp://hub.miningpoolhub.com:20527'}
+  {name: 'mph_zcash', miner: miningpoolhub.miner, apikey: miningpoolhub.apikey, address: 'stratum+tcp://hub.miningpoolhub.com:20527'}
 ];
 
 //DO NOT EDIT BELOW THIS LINE

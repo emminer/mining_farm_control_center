@@ -227,7 +227,8 @@ function checkPools(rigs){
 
   return Promise.mapSeries(pools, pool => {
     let miner = grouped[pool][0].pool.miner;
-    return poolFactory(pool)(miner).catch(err => {
+    let apikey = grouped[pool][0].pool.apikey;
+    return poolFactory(pool)(miner, apikey).catch(err => {
       logger.error(`pool: ${pool}, `, err.message);
       if (err instanceof PoolError) {
         return grouped[pool].map(r => {
