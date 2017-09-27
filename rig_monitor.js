@@ -24,6 +24,7 @@ if (snapshot && snapshot.time && moment(snapshot.time).add(5, 'minutes').isAfter
     let rig2 = _.find(snapshot.rigs, r => r.name === rig.name);
     if (rig2) {
       rig.startedAt = moment(rig2.startedAt);
+      rig.offline = rig2.offline;
     }
   });
   logger.info('RIGS are restored from snapshot.');
@@ -207,6 +208,7 @@ function exit(cb) {
   rigs = RIGS.filter(rig => !rig.offline).map(rig => ({
     name: rig.name,
     startedAt: rig.startedAt,
+    offline: rig.offline,
   }));
   require('fs').writeFile('snapshot.json', JSON.stringify({
     time: moment(),
