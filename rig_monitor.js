@@ -152,12 +152,16 @@ function checkRigs(checkGpu) {
           });
         });
       } else {
-        gpuPromise = Promise.resolve(reachable.map(r => null));
+        gpuPromise = Promise.resolve(reachable.map(r => 'unchanged'));
       }
 
       return gpuPromise.then(rigsWithGpu => {
         rigsWithGpu.forEach((withGpu, index) => {
-          reachable[index].gpu = withGpu;
+          if (withGpu === 'unchanged') {
+
+          } else if (withGpu) {
+            reachable[index].gpu = withGpu;
+          }
         })
         logRigs();
         reportRigsToServer();
