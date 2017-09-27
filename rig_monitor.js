@@ -23,8 +23,10 @@ if (snapshot && snapshot.time && moment(snapshot.time).add(5, 'minutes').isAfter
   RIGS.forEach(rig => {
     let rig2 = _.find(snapshot.rigs, r => r.name === rig.name);
     if (rig2) {
-      rig.startedAt = moment(rig2.startedAt);
       rig.offline = rig2.offline;
+      if (!rig.offline) {
+        rig.startedAt = moment(rig2.startedAt);
+      }
     }
   });
   logger.info('RIGS are restored from snapshot.');
@@ -205,7 +207,7 @@ function checkRigs(checkGpu) {
 
 function exit(cb) {
   logger.warn('app is exiting...');
-  rigs = RIGS.filter(rig => !rig.offline).map(rig => ({
+  rigs = RIGS.map(rig => ({
     name: rig.name,
     startedAt: rig.startedAt,
     offline: rig.offline,
