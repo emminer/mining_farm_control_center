@@ -76,7 +76,7 @@ function checkRigs(checkGpu) {
     return checkPools(reachable).then(rigsFromPool => {
       now = moment();
       reachable.forEach(rig => {
-        let fromPool = _.find(rigsFromPool, r => r.name === rig.name);
+        let fromPool = _.find(rigsFromPool, r => r.name === rig.name && r.poolName === rig.pool.name);
         if (fromPool) {
           if (fromPool.poolError) {
             rig.lastAction = {action: 'recheck_pool_error', reason: fromPool.poolError.message, time: now};
@@ -135,7 +135,7 @@ function checkRigs(checkGpu) {
               if (gpuErr instanceof Promise.TimeoutError) {
                 rig.lastAction.reason = 'nvidia-smi hangs';
               } else if (gpuErr.code === 'ECONNREFUSED') {
-                rig.lastAction.reason = 'ECONNREFUSED';
+                rig.lastAction.reason = 'ssh_ECONNREFUSED';
               } else if (gpuErr.sshExitCode !== 0) {
                 rig.lastAction.reason = `nvidia-smi error, code: ${gpuErr.sshExitCode}, stderr: ${gpuErr.stderr}`;
               } else {
@@ -231,7 +231,7 @@ function checkPools(rigs){
       logger.error(`pool: ${pool}, `, err.message);
       if (err instanceof PoolError) {
         return grouped[pool].map(r => {
-          return {name: r.name, poolError: err};
+          return {name: r.name, poolName: pool, poolError: err};
         });
       } else {
         throw err;
