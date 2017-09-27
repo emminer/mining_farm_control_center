@@ -2,6 +2,7 @@ const moment = require('moment');
 const Promise = require('bluebird');
 const _ = require('lodash');
 const Table = require('easy-table');
+const FixedArray = require('fixed-length-array');
 
 const logger = require('./logger');
 const ping = require('./ping');
@@ -12,6 +13,7 @@ const PoolError = require('./pools/poolError');
 const rigBuilder = require('./rigBuilder');
 
 const RIGS = JSON.parse(JSON.stringify(config.rigs));//deep copy
+const ACTION_HISTORY = new FixedArray(100);
 let snapshot;
 try {
   snapshot = require('./snapshot.json');
@@ -159,6 +161,16 @@ function checkRigs(checkGpu) {
         const rigGPIO = rigBuilder();
         return Promise.mapSeries(startups, rig => {
           logger.warn(`starting rig ${rig.name} ${rig.ip}`);
+          ACTION_HISTORY.unshift({
+            time: moment(),
+            action: rig.lastAction.action,
+            rig: {
+              name: rig.name,
+              coin: rig.coin,
+              hashrate: rig.hashrate ? rig.hashrate.current : 0,
+            },
+            reason: rig.lastAction.reason,
+          });
           return rigGPIO.startup(rig.pin).then(() => {
             logger.warn(`rig ${rig.name} ${rig.ip} was started.`);
             rig.startedAt = rig.lastAction.time = moment();
@@ -167,6 +179,16 @@ function checkRigs(checkGpu) {
         }).then(() => {
           return Promise.mapSeries(resets, rig => {
             logger.warn(`reseting rig ${rig.name} ${rig.ip}`);
+            ACTION_HISTORY.unshift({
+              time: moment(),
+              action: rig.lastAction.action,
+              rig: {
+                name: rig.name,
+                coin: rig.coin,
+                hashrate: rig.hashrate.current,
+              },
+              reason: rig.lastAction.reason,
+            });
             return rigGPIO.restart(rig.pin).then(() => {
               logger.warn(`rig ${rig.name} ${rig.ip} was resetted.`);
               rig.startedAt = rig.lastAction.time = moment();
@@ -270,7 +292,7 @@ function logRigs() {
 }
 
 function getDisplayName(rig) {
-  return `rig ${rig.name} ${rig.ip}`;
+  return `rig ${rig.name} ${rig.coin}`;
 }
 
-module.exports = { RIGS, start, checkRigs, exit, lock, unlock };
+module.exports = { RIGS, ACTION_HISTORY, start, checkRigs, exit, lock, unlock };

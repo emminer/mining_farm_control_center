@@ -84,6 +84,14 @@ router.post('/rigs/:rigname/offline', auth, function(req, res, next) {
   res.send('OK');
 });
 
+router.get('/history', function(req, res, next) {
+  res.send(monitor.ACTION_HISTORY.filter(a => !!a).map(action => {
+    let time = action.time.format('MM-DD HH:mm:ss');
+    let rig = action.rig.name;
+    return `${time} ${rig} ${action.rig.coin} ${action.action}-${action.reason} hashrate: ${action.rig.hashrate}`;
+  }).join('\n') + '\n');
+});
+
 function rigAction(res, next, promise) {
   if (monitor.lock()){
     promise
