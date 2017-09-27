@@ -9,4 +9,20 @@ function get(url) {
   return rp(options);
 }
 
-module.exports = { get };
+function post(url, token, payload, cb) {
+  rp({
+    url,
+    method: 'POST',
+    headers: {
+      'FARM_TOKEN': token,
+    },
+    body: payload,
+    json: true,
+  }).then((response) => {
+    cb && cb(null, response);
+  }).catch(err => {
+    cb && cb(err);
+  });
+}
+
+module.exports = { get, post };

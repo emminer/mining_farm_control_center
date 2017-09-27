@@ -8,6 +8,8 @@ const miningpoolhub = {
 };
 const check_rigs_time_minutes = 5;
 const check_gpu_interval_minutes = 10;
+const report_status_endpoint = 'http://localhost:3009/api/farms/status';
+const report_status_token = 'token';
 const api = {
   user: 'alice',
   password: 'wieru87fsx',
@@ -33,6 +35,8 @@ const pools = [
 module.exports = {
   check_rigs_time_minutes,
   check_gpu_interval_minutes,
+  report_status_endpoint,
+  report_status_token,
   api,
   rigs: rigs.map(rig => {
     rig.pool = pools.filter(p => p.name === rig.pool)[0];

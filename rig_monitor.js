@@ -11,6 +11,7 @@ const config = require('./config');
 const poolFactory = require('./pools/factory');
 const PoolError = require('./pools/poolError');
 const rigBuilder = require('./rigBuilder');
+const { post } = require('./request');
 
 const RIGS = JSON.parse(JSON.stringify(config.rigs));//deep copy
 const ACTION_HISTORY = new FixedArray(100);
@@ -156,7 +157,7 @@ function checkRigs(checkGpu) {
           reachable[index].gpu = withGpu;
         })
         logRigs();
-        //TODO: report rigs to server.
+        reportRigsToServer();
 
         const rigGPIO = rigBuilder();
         return Promise.mapSeries(startups, rig => {
@@ -288,6 +289,16 @@ function logRigs() {
         util: g.util,
       }))));
     }
+  });
+}
+
+function reportRigsToServer() {
+  post(config.report_status_endpoint, config.report_status_token, {rigs: RIGS}, (err) => {
+    if (err) {
+      return logger.error(err);
+    }
+
+    logger.info('status was reported.');
   });
 }
 
