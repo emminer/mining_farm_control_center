@@ -109,6 +109,7 @@ function checkRigs(checkGpu) {
             rig.lastAction = {action: 'reset', reason: 'lowHashrate'};
           } else {
             rig.hashrate = fromPool.hashrate;
+            rig.lastSeen = fromPool.lastSeen;
             rig.lastAction = {action: 'continue', time: now};
           }
         } else {
