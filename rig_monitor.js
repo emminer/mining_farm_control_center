@@ -24,7 +24,7 @@ if (snapshot && snapshot.time && moment(snapshot.time).add(5, 'minutes').isAfter
     let rig2 = _.find(snapshot.rigs, r => r.name === rig.name);
     if (rig2) {
       rig.offline = rig2.offline;
-      if (!rig.offline) {
+      if (!rig.offline && rig2.startedAt) {
         rig.startedAt = moment(rig2.startedAt);
       }
     }
