@@ -19,6 +19,7 @@ METHOD="POST"
 
 if [ "$ACTION" = "offline" ] || [ "$ACTION" = "online" ]; then
     curl -X $METHOD -H "$HEADER" "$URL$ACTION"
+    echo
 fi
 
 if [ "$ACTION" = "startup" ] || [ "$ACTION" = "shutdown" ] || [ "$ACTION" = "reset" ]; then
@@ -27,4 +28,5 @@ if [ "$ACTION" = "startup" ] || [ "$ACTION" = "shutdown" ] || [ "$ACTION" = "res
     echo
     echo "perform $ACTION"
     curl -X $METHOD -H "$HEADER" "$URL$ACTION"
+    echo
 fi
