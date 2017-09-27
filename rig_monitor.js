@@ -185,7 +185,7 @@ function checkRigs(checkGpu) {
               rig: {
                 name: rig.name,
                 coin: rig.coin,
-                hashrate: rig.hashrate.current,
+                hashrate: rig.hashrate ? rig.hashrate.current : 0,
               },
               reason: rig.lastAction.reason,
             });
