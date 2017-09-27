@@ -28,7 +28,7 @@ if (snapshot && snapshot.time && moment(snapshot.time).add(5, 'minutes').isAfter
   logger.info('RIGS are restored from snapshot.');
 }
 const TRUN_ON_QUEUE = [];
-const CHECK_GPU_INTERVAL_MINUTES = 30;
+const CHECK_GPU_INTERVAL_MINUTES = config.check_gpu_interval_minutes;
 let lastCheckGpuTime = moment().subtract(1, 'days');
 let locker = false;
 

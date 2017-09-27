@@ -7,6 +7,7 @@ const miningpoolhub = {
   apikey: 'api_key',
 };
 const check_rigs_time_minutes = 5;
+const check_gpu_interval_minutes = 10;
 const api = {
   user: 'alice',
   password: 'wieru87fsx',
@@ -31,6 +32,7 @@ const pools = [
 
 module.exports = {
   check_rigs_time_minutes,
+  check_gpu_interval_minutes,
   api,
   rigs: rigs.map(rig => {
     rig.pool = pools.filter(p => p.name === rig.pool)[0];
