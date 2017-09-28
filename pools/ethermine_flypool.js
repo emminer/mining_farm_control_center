@@ -3,7 +3,7 @@ const { get } = require('../request');
 const errors = require('request-promise/errors');
 const PoolError = require('./poolError');
 
-module.exports = function(poolName, endpoint, unit, hashrateHandler){
+module.exports = function(poolName, endpoint, unit, hashrateHandler, enableLastSeen){
   return function(miner) {
     const url = `${endpoint}/miner/${miner}/workers`;
     return get(url).then(resp => {
@@ -12,7 +12,7 @@ module.exports = function(poolName, endpoint, unit, hashrateHandler){
           return {
             name: worker.worker,
             poolName,
-            lastSeen: worker.lastSeen ? moment.unix(worker.lastSeen) : null,
+            lastSeen: enableLastSeen ? (worker.lastSeen ? moment.unix(worker.lastSeen) : null) : moment(),
             hashrate: {
               unit,
               current: worker.currentHashrate ? hashrateHandler(worker.currentHashrate) : 0,
