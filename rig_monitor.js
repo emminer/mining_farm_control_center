@@ -280,7 +280,7 @@ function isBooting(rig) {
 }
 
 function isStarting(rig) {
-  return rig.startedAt && moment().subtract(15, 'minutes').isBefore(rig.startedAt);
+  return rig.startedAt && moment().subtract(rig.pool.delay_minutes, 'minutes').isBefore(rig.startedAt);
 }
 
 function logRigs() {
