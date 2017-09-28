@@ -98,7 +98,7 @@ function checkRigs(checkGpu) {
             } else {
               rig.lastAction = {action: 'reset', reason: 'lastSeenNull'};
             }
-          } else if (now.clone().subtract(20, 'minutes').isAfter(fromPool.lastSeen)) {
+          } else if (now.clone().subtract(40, 'minutes').isAfter(fromPool.lastSeen)) {
             if (isStarting(rig)){
               rig.lastAction = {action: 'recheck_starting', reason: 'longTimeNoSee', time: now};
             } else {
