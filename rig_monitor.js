@@ -104,7 +104,7 @@ function checkRigs(checkGpu) {
             } else {
               rig.lastAction = {action: 'reset', reason: 'longTimeNoSee'};
             }
-          } else if (fromPool.hashrate.current <= rig.min_hashrate && now.clone().subtract(1, 'hours').isAfter(rig.startedAt)) {
+          } else if (fromPool.hashrate.current < rig.min_hashrate && now.clone().subtract(1, 'hours').isAfter(rig.startedAt)) {
             rig.hashrate = fromPool.hashrate;
             rig.lastAction = {action: 'reset', reason: 'lowHashrate'};
           } else {
