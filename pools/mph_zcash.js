@@ -1,5 +1,5 @@
 const builder = require('./miningPoolHub');
 
 module.exports = builder('zcash', 'kH/s', function(hashrate){
-  return hashrate.toFixed(1);
+  return Math.round(hashrate * 10) / 10;
 });
