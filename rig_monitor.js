@@ -21,7 +21,7 @@ try {
 } catch (e) {}
 if (snapshot && snapshot.time && moment(snapshot.time).add(5, 'minutes').isAfter(moment())) {
   RIGS.forEach(rig => {
-    let rig2 = _.find(snapshot.rigs, r => r.name === rig.name);
+    let rig2 = _.find(snapshot.rigs, r => r.name === rig.name && r.coin === rig.coin && r.pool === rig.pool.name);
     if (rig2) {
       rig.offline = rig2.offline;
       if (!rig.offline && rig2.startedAt) {
@@ -212,8 +212,10 @@ function checkRigs(checkGpu) {
 
 function exit(cb) {
   logger.warn('app is exiting...');
-  rigs = RIGS.map(rig => ({
+  let rigs = RIGS.map(rig => ({
     name: rig.name,
+    coin: rig.coin,
+    pool: rig.pool.name,
     startedAt: rig.startedAt,
     offline: rig.offline,
   }));
