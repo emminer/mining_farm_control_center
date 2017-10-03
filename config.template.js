@@ -23,11 +23,11 @@ const rigs = [
 ];
 
 const pools = [
-  {name: 'ethermine', miner: '89fea85a0a5a6a8a2b397d82f57e920010008a90', address: 'asia1.ethermine.org:14444', delay_minutes: 30},
-  {name: 'flypool_zcash', miner: 't1JCUbGtCRCkbegXcLWzq3uYKmrLa2PGVco', address: 'cn1-zcash.flypool.org:3333', delay_minutes: 30},
-  {name: 'suprnova_sigt', miner: suprnova.miner, address: 'stratum+tcp://sigt.suprnova.cc:7106', delay_minutes: 30},
-  {name: 'suprnova_lbry', miner: suprnova.miner, address: 'stratum+tcp://lbry.suprnova.cc:6256', delay_minutes: 30},
-  {name: 'mph_zcash', miner: miningpoolhub.miner, apikey: miningpoolhub.apikey, address: 'stratum+tcp://hub.miningpoolhub.com:20527', delay_minutes: 40}
+  {name: 'ethermine', miner: '89fea85a0a5a6a8a2b397d82f57e920010008a90', address: 'asia1.ethermine.org:14444', warm_minutes: 30, lastSeen_delay_minutes: 20},
+  {name: 'flypool_zcash', miner: 't1JCUbGtCRCkbegXcLWzq3uYKmrLa2PGVco', address: 'cn1-zcash.flypool.org:3333', warm_minutes: 30},
+  {name: 'suprnova_sigt', miner: suprnova.miner, address: 'stratum+tcp://sigt.suprnova.cc:7106', warm_minutes: 30},
+  {name: 'suprnova_lbry', miner: suprnova.miner, address: 'stratum+tcp://lbry.suprnova.cc:6256', warm_minutes: 30},
+  {name: 'mph_zcash', miner: miningpoolhub.miner, apikey: miningpoolhub.apikey, address: 'stratum+tcp://hub.miningpoolhub.com:20527', warm_minutes: 40}
 ];
 
 //DO NOT EDIT BELOW THIS LINE

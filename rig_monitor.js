@@ -98,7 +98,7 @@ function checkRigs(checkGpu) {
             } else {
               rig.lastAction = {action: 'reset', reason: 'lastSeenNull'};
             }
-          } else if (now.clone().subtract(40, 'minutes').isAfter(fromPool.lastSeen)) {
+          } else if (now.clone().subtract(rig.pool.lastSeen_delay_minutes || 40, 'minutes').isAfter(fromPool.lastSeen)) {
             if (isStarting(rig)){
               rig.lastAction = {action: 'recheck_starting', reason: 'longTimeNoSee', time: now};
             } else {
@@ -282,7 +282,7 @@ function isBooting(rig) {
 }
 
 function isStarting(rig) {
-  return rig.startedAt && moment().subtract(rig.pool.delay_minutes, 'minutes').isBefore(rig.startedAt);
+  return rig.startedAt && moment().subtract(rig.pool.warm_minutes, 'minutes').isBefore(rig.startedAt);
 }
 
 function logRigs() {
