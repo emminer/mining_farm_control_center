@@ -138,7 +138,8 @@ function checkRigs(checkGpu) {
         gpuPromise = Promise.mapSeries(reachable, rig => {
           return gpu(rig.ip).catch((gpuErr) => {
             if (rig.lastAction.action !== 'reset') {
-              rig.lastAction.action = 'reset';//TODO: add this rig to reset list to reset it.
+              rig.lastAction.action = 'reset';
+              resets.push(rig);
               if (gpuErr instanceof Promise.TimeoutError) {
                 rig.lastAction.reason = 'nvidia-smi hangs';
               } else if (gpuErr.code === 'ECONNREFUSED') {
