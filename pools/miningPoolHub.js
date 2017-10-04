@@ -5,7 +5,8 @@ const PoolError = require('./poolError');
 
 module.exports = function(coinname, unit, hashrateHandler){
   return function(user, apikey) {
-    const url = `https://${coinname}.miningpoolhub.com/index.php?page=api&action=getuserworkers&api_key=${apikey}`;
+    let timestamp = moment().unix();
+    const url = `https://${coinname}.miningpoolhub.com/index.php?page=api&action=getuserworkers&api_key=${apikey}&_ts=${timestamp}`;
     return get(url).then(resp => {
       let now = moment();
       return (resp.getuserworkers.data || []).map(worker => {
