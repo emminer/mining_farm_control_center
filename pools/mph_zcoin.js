@@ -1,5 +1,5 @@
-const builder = require('./miningPoolHub');
+const builder = require('./mph_suprnova');
 
-module.exports = builder('zcoin', 'MH/s', function(hashrate){
+module.exports = builder('mph_zcoin')('zcoin', 'MH/s', function(hashrate){
   return Math.round(hashrate / 100) / 10;
 });
