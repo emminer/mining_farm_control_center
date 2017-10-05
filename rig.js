@@ -3,7 +3,7 @@ var Promise = require('bluebird');
 
 const shutdown_press_seconds = 5;
 const startup_press_ms = 100;
-const restart_delay_seconds = 5;
+const restart_delay_seconds = 10;
 
 function shutdown(pin, close) {
   rpio.open(pin, rpio.OUTPUT, rpio.LOW);
