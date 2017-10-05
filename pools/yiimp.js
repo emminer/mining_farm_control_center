@@ -37,6 +37,10 @@ module.exports = function(poolName, unit) {
         });
       });
       return rigs;
+    }).catch(errors.StatusCodeError, reason => {
+      throw new PoolError(reason.message, reason.statusCode, reason.error);
+    }).catch(errors.RequestError, reason => {
+      throw PoolError.NetworkError(reason.message);
     });
   };
 };
