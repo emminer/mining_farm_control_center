@@ -145,7 +145,7 @@ function checkRigs(checkGpu) {
               } else if (gpuErr.code === 'ECONNREFUSED') {
                 rig.lastAction.reason = 'ssh_ECONNREFUSED';
               } else if (gpuErr.sshExitCode !== 0) {
-                rig.lastAction.reason = `nvidia-smi error, code: ${gpuErr.sshExitCode}, stderr: ${gpuErr.stderr}`;
+                rig.lastAction.reason = `nvidia-smi error, code: ${gpuErr.sshExitCode}, stdout: ${gpuErr.stdout}, stderr: ${gpuErr.stderr}`;
               } else {
                 logger.error('nvidia-smi error, unknown: ', gpuErr);
               }

@@ -22,6 +22,7 @@ module.exports = function(host, user, command) {
         if (code !== 0) {
           let err = new Error(`command ${command} exits with code ${code}`);
           err.sshExitCode = code;
+          err.stdout = stdout;
           err.stderr = stderr;
           return reject(err);
         }
