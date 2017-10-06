@@ -148,6 +148,7 @@ function checkRigs(checkGpu) {
                 rig.lastAction.reason = `nvidia-smi error, code: ${gpuErr.sshExitCode}, stdout: ${gpuErr.stdout}, stderr: ${gpuErr.stderr}`;
               } else {
                 logger.error('nvidia-smi error, unknown: ', gpuErr);
+                rig.lastAction.reason = 'nvidia-smi error, ' + gpuErr.message;
               }
             };
             return null;
