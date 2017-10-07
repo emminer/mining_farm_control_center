@@ -55,6 +55,7 @@ function start() {
     }, (err) => {
       logger.error(err);
       unlock();
+      return Promise.delay(config.check_rigs_time_minutes * 60 * 1000).then(start);
     });
   });
 }
