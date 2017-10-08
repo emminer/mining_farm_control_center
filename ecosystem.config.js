@@ -12,6 +12,11 @@ module.exports = {
             "PORT": 3001,
             "NODE_ENV": "production",
             "LOG_LEVEL": "info",
+        },
+        env_production2: {
+          "PORT": 3001,
+          "NODE_ENV": "production",
+          "LOG_LEVEL": "verbose",
         }
       }
   ]
