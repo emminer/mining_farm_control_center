@@ -241,7 +241,7 @@ function unlock() {
 }
 
 function checkPing(rigs){//return reachable and unreachable rigs
-  return ping(rigs.mapSeries(r => r.ip)).then(result => {
+  return ping(rigs.map(r => r.ip)).then(result => {
     let reachable = [];
     let unreachable = [];
     for (let i = 0; i< rigs.length; i++) {
