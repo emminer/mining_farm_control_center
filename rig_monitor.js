@@ -196,7 +196,6 @@ function checkRigs(checkGpu) {
           }
         });
         logRigs();
-        reportRigsToServer();
 
         const rigGPIO = rigBuilder();
         return Promise.mapSeries(startups, rig => {
@@ -232,11 +231,11 @@ function checkRigs(checkGpu) {
             return rigGPIO.restart_try_soft(rig.ip, rig.pin).then((softOrHard) => {
               logger.warn(`rig ${rig.name} ${rig.ip} was resetted ${softOrHard}.`);
               rig.startedAt = rig.lastAction.time = moment();
-              //rig.resettedSoftOrHard = softOrHard;
+              rig.resettedSoftOrHard = softOrHard;
               return Promise.delay(1000);
             });
           });
-        });
+        }).then(reportRigsToServer);
       });
     });
   });
