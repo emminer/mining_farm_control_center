@@ -1,5 +1,7 @@
-var rpio = require('rpio');
-var Promise = require('bluebird');
+const rpio = require('rpio');
+const Promise = require('bluebird');
+const ssh = require('./ssh');
+const logger = require('./logger');
 
 const shutdown_press_seconds = 5;
 const startup_press_ms = 100;
@@ -31,4 +33,17 @@ function restart(pin) {
   });
 }
 
-module.exports = { shutdown, startup, restart };
+function restart_try_soft(ip, pin) {
+  return ssh(ip, 'm1', 'sudo reboot')
+  .then(() => {
+    return 'soft';
+  })
+  .catch(err => {
+    logger.error(`soft reset ${ip} failed, `, err);
+    return restart(pin).then(() => {
+      return 'hard';
+    });
+  });
+}
+
+module.exports = { shutdown, startup, restart, restart_try_soft };
