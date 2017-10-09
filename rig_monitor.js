@@ -93,7 +93,22 @@ function checkRigs(checkGpu) {
             if (isStarting(rig)){
               rig.lastAction = {action: 'recheck_starting', reason: 'lastSeenNull', time: now};
             } else {
-              rig.lastAction = {action: 'reset', reason: 'lastSeenNull'};
+              let prevAction = rig.lastAction;
+              if (!prevAction || prevAction.action !== 'notSeen') {
+                if (rig.pool.on_not_in_pool_wait_minutes_before_reset) {
+                  rig.lastAction = {action: 'notSeen', time: now};
+                  logger.warn(`rig ${rig.name} is not seen, check pool in next round.`);
+                } else {
+                  rig.lastAction = {action: 'reset', reason: 'notSeen'};
+                }
+              } else {//prev action is notSeen, check time
+                if (now.clone().subtract(rig.pool.on_not_in_pool_wait_minutes_before_reset, 'minutes')
+                  .isAfter(prevAction.time)) {
+                  rig.lastAction = {action: 'reset', reason: 'notSeen'};
+                } else {
+                  logger.warn(`rig ${rig.name} is not seen, check pool in next round.`);
+                }
+              }
             }
           } else if (now.clone().subtract(rig.pool.lastSeen_delay_minutes || 40, 'minutes').isAfter(fromPool.lastSeen)) {
             if (isStarting(rig)){
@@ -102,12 +117,27 @@ function checkRigs(checkGpu) {
               rig.lastAction = {action: 'reset', reason: 'longTimeNoSee'};
             }
           } else if (fromPool.hashrate.current < rig.min_hashrate) {
+            rig.hashrate = fromPool.hashrate;
             if (isStarting(rig)){
               rig.lastAction = {action: 'recheck_starting', reason: 'lowHashrate', time: now};
             } else {
-              rig.lastAction = {action: 'reset', reason: 'lowHashrate'};
+              let prevAction = rig.lastAction;
+              if (!prevAction || prevAction.action !== 'lowHashrate') {
+                if (rig.pool.on_low_hashrate_wait_minutes_before_reset) {
+                  rig.lastAction = {action: 'lowHashrate', time: now};
+                  logger.warn(`rig ${rig.name}'s hashrate is low, check pool in next round.`);
+                } else {
+                  rig.lastAction = {action: 'reset', reason: 'lowHashrate'};
+                }
+              } else {//prev action is lowHashrate, check time
+                if (now.clone().subtract(rig.pool.on_low_hashrate_wait_minutes_before_reset, 'minutes')
+                  .isAfter(prevAction.time)) {
+                  rig.lastAction = {action: 'reset', reason: 'lowHashrate'};
+                } else {
+                  logger.warn(`rig ${rig.name}'s hashrate is low, check pool in next round.`);
+                }
+              }
             }
-            rig.hashrate = fromPool.hashrate;
           } else {
             rig.hashrate = fromPool.hashrate;
             rig.lastSeen = fromPool.lastSeen;
