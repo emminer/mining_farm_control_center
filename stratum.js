@@ -14,9 +14,10 @@ function isAlive(address) {
       socket.destroy();
       resolve(true);
     });
-  }).timeout(5 * 1000)
-  .catch(() => {
-    return false;
-  });
+  })
+    .timeout(5 * 1000)
+    .catch(() => {
+      return false;
+    });
 }
 module.exports = isAlive;

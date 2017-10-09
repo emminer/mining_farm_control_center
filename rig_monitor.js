@@ -18,7 +18,9 @@ const ACTION_HISTORY = new FixedArray(100);
 let snapshot;
 try {
   snapshot = require('./snapshot.json');
-} catch (e) {}
+} catch (e) {
+  // continue regardless of error
+}
 if (snapshot && snapshot.time && moment(snapshot.time).add(5, 'minutes').isAfter(moment())) {
   RIGS.forEach(rig => {
     let rig2 = _.find(snapshot.rigs, r => r.name === rig.name && r.coin === rig.coin && r.pool === rig.pool.name);
@@ -31,7 +33,7 @@ if (snapshot && snapshot.time && moment(snapshot.time).add(5, 'minutes').isAfter
   });
   logger.info('RIGS are restored from snapshot.');
 }
-const TRUN_ON_QUEUE = [];
+
 const CHECK_GPU_INTERVAL_MINUTES = config.check_gpu_interval_minutes;
 let lastCheckGpuTime = moment().subtract(1, 'days');
 let locker = false;
@@ -151,22 +153,20 @@ function checkRigs(checkGpu) {
                 logger.error('nvidia-smi error, unknown: ', gpuErr);
                 rig.lastAction.reason = 'nvidia-smi error, ' + gpuErr.message;
               }
-            };
+            }
             return null;
           });
         });
       } else {
-        gpuPromise = Promise.resolve(reachable.map(r => 'unchanged'));
+        gpuPromise = Promise.resolve(reachable.map(() => 'unchanged'));
       }
 
       return gpuPromise.then(rigsWithGpu => {
         rigsWithGpu.forEach((withGpu, index) => {
-          if (withGpu === 'unchanged') {
-
-          } else if (withGpu) {
+          if (withGpu && withGpu !== 'unchanged') {
             reachable[index].gpu = withGpu;
           }
-        })
+        });
         logRigs();
         reportRigsToServer();
 
@@ -277,7 +277,7 @@ function checkPools(rigs){
     });
   }).then(result => {
     return _.flatten(result);
-  })
+  });
 }
 
 function isBooting(rig) {

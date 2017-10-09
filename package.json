@@ -13,6 +13,7 @@
     "dateformat": "^2.0.0",
     "debug": "~2.6.0",
     "easy-table": "^1.1.0",
+    "eslint": "^4.8.0",
     "express": "~4.14.1",
     "express-basic-auth": "^1.1.2",
     "fixed-length-array": "^0.1.0",

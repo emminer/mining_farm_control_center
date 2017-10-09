@@ -35,15 +35,15 @@ function restart(pin) {
 
 function restart_try_soft(ip, pin) {
   return ssh(ip, 'm1', 'sudo reboot')
-  .then(() => {
-    return 'soft';
-  })
-  .catch(err => {
-    logger.error(`soft reset ${ip} failed, `, err);
-    return restart(pin).then(() => {
-      return 'hard';
+    .then(() => {
+      return 'soft';
+    })
+    .catch(err => {
+      logger.error(`soft reset ${ip} failed, `, err);
+      return restart(pin).then(() => {
+        return 'hard';
+      });
     });
-  });
 }
 
 module.exports = { shutdown, startup, restart, restart_try_soft };
