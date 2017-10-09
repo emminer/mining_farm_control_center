@@ -1,6 +1,10 @@
 const Promise = require('bluebird');
 const logger = require('./logger');
 
+if (process.env.MFCC_DRY_RUN === 'true') {
+  logger.info('DRY RUN');
+}
+
 const GPIO = require('./rig');
 const fake = {
   startup: function(pin){
