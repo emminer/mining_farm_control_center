@@ -26,6 +26,7 @@
     "rpio": "^0.9.17",
     "serve-favicon": "~2.3.2",
     "simple-ssh": "^1.0.0",
+    "stratum": "^0.2.4",
     "winston": "^2.3.1"
   }
 }
