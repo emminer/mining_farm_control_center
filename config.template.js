@@ -28,7 +28,10 @@ const pools = [
   {name: 'suprnova_sigt', miner: suprnova.miner, address: 'stratum+tcp://sigt.suprnova.cc:7106', warm_minutes: 30},
   {name: 'suprnova_lbry', miner: suprnova.miner, address: 'stratum+tcp://lbry.suprnova.cc:6256', warm_minutes: 30},
   {name: 'mph_zcash', miner: miningpoolhub.miner, apikey: miningpoolhub.apikey, address: 'stratum+tcp://hub.miningpoolhub.com:20527', warm_minutes: 40},
-  {name: 'yiimp_bsd', miner: 'i3j8ymbmy58kTAnYyZiwdvLq1wksZHS', address: 'stratum+tcp://yiimp.eu:3739', warm_minutes: 20},
+  {name: 'yiimp_bsd', miner: 'i3j8ymbmy58kTAnYyZiwdvLq1wksZHS',
+  address: 'stratum+tcp://yiimp.eu:3739', warm_minutes: 20,
+  on_low_hashrate_wait_minutes_before_reset: 30,
+  on_not_in_pool_wait_minutes_before_reset: 30},
 ];
 
 //DO NOT EDIT BELOW THIS LINE

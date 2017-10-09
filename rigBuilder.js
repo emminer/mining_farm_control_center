@@ -14,6 +14,10 @@ module.exports = function() {
     restart: function(pin){
       logger.info(`GPIO restarts pin ${pin}`);
       return Promise.delay(10 * 1000);
+    },
+    restart_try_soft: function(ip, pin) {
+      logger.info(`soft reset ip ${ip}, pin ${pin}`);
+      return Promise.delay(2 * 1000).then(() => 'soft');
     }
   };
-}
+};

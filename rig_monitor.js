@@ -229,9 +229,10 @@ function checkRigs(checkGpu) {
               },
               reason: rig.lastAction.reason,
             });
-            return rigGPIO.restart(rig.pin).then(() => {
-              logger.warn(`rig ${rig.name} ${rig.ip} was resetted.`);
+            return rigGPIO.restart_try_soft(rig.ip, rig.pin).then((softOrHard) => {
+              logger.warn(`rig ${rig.name} ${rig.ip} was resetted ${softOrHard}.`);
               rig.startedAt = rig.lastAction.time = moment();
+              //rig.resettedSoftOrHard = softOrHard;
               return Promise.delay(1000);
             });
           });
