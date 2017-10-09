@@ -4,6 +4,7 @@ const mph_zcash = require('./mph_zcash');
 const mph_zcoin = require('./mph_zcoin');
 const suprnova_bsd = require('./suprnova_bsd');
 const yiimp = require('./yiimp');
+const ethfans = require('./ethfans');
 
 module.exports = function(pool) {
   if (pool === 'ethermine') {
@@ -18,5 +19,7 @@ module.exports = function(pool) {
     return suprnova_bsd;
   } else if (pool === 'yiimp_bsd') {
     return yiimp(pool, 'MH/s');
+  } else if (pool === 'ethfans') {
+    return ethfans;
   }
-}
+};
