@@ -89,12 +89,6 @@ function checkRigs(checkGpu) {
         if (fromPool) {
           if (fromPool.poolError) {
             rig.lastAction = {action: 'recheck_pool_error', reason: fromPool.poolError.message, time: now};
-          } else if (fromPool.hashrate.current === 0) {
-            if (isStarting(rig)){
-              rig.lastAction = {action: 'recheck_starting', reason: 'hashrate0', time: now};
-            } else {
-              rig.lastAction = {action: 'reset', reason: 'hashrate0'};
-            }
           } else if (!fromPool.lastSeen) {
             if (isStarting(rig)){
               rig.lastAction = {action: 'recheck_starting', reason: 'lastSeenNull', time: now};
@@ -107,9 +101,13 @@ function checkRigs(checkGpu) {
             } else {
               rig.lastAction = {action: 'reset', reason: 'longTimeNoSee'};
             }
-          } else if (fromPool.hashrate.current < rig.min_hashrate && now.clone().subtract(1, 'hours').isAfter(rig.startedAt)) {
+          } else if (fromPool.hashrate.current < rig.min_hashrate) {
+            if (isStarting(rig)){
+              rig.lastAction = {action: 'recheck_starting', reason: 'lowHashrate', time: now};
+            } else {
+              rig.lastAction = {action: 'reset', reason: 'lowHashrate'};
+            }
             rig.hashrate = fromPool.hashrate;
-            rig.lastAction = {action: 'reset', reason: 'lowHashrate'};
           } else {
             rig.hashrate = fromPool.hashrate;
             rig.lastSeen = fromPool.lastSeen;
