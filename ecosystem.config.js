@@ -13,10 +13,11 @@ module.exports = {
         'NODE_ENV': 'production',
         'LOG_LEVEL': 'info',
       },
-      env_production2: {
+      env_dryrun: {
         'PORT': 3001,
-        'NODE_ENV': 'production',
+        'NODE_ENV': 'development',
         'LOG_LEVEL': 'verbose',
+        'MFCC_DRY_RUN': 'true',
       }
     }
   ]

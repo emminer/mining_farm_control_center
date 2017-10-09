@@ -10,6 +10,9 @@ var index = require('./routes/index');
 var users = require('./routes/users');
 var api = require('./routes/api');
 
+if (process.env.MFCC_DRY_RUN === 'true') {
+  logger.info('DRY RUN');
+}
 var monitor = require('./rig_monitor');
 monitor.start();
 process.on('SIGINT', function() {
