@@ -114,6 +114,7 @@ function checkRigs(checkGpu) {
             if (isStarting(rig)){
               rig.lastAction = {action: 'recheck_starting', reason: 'longTimeNoSee', time: now};
             } else {
+              logger.info(`rig ${rig.name} longTimeNoSee, last seen:`, fromPool.lastSeen);
               rig.lastAction = {action: 'reset', reason: 'longTimeNoSee'};
             }
           } else if (fromPool.hashrate.current < rig.min_hashrate) {
