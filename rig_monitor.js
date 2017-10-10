@@ -143,11 +143,26 @@ function checkRigs(checkGpu) {
             rig.lastSeen = fromPool.lastSeen;
             rig.lastAction = {action: 'continue', time: now};
           }
-        } else {
+        } else {//canoot be found from pool
           if (isStarting(rig)) {
             rig.lastAction = {action: 'recheck_pool', time: now};
           } else {
-            rig.lastAction = {action: 'reset', reason: 'notFoundInPool'};
+            let prevAction = rig.lastAction;
+            if (!prevAction || prevAction.action !== 'notFoundInPool') {
+              if (rig.pool.on_not_found_in_pool_wait_minutes_before_reset) {
+                rig.lastAction = {action: 'notFoundInPool', time: now};
+                logger.warn(`rig ${rig.name} is not found in pool, check pool in next round.`);
+              } else {
+                rig.lastAction = {action: 'reset', reason: 'notFoundInPool'};
+              }
+            } else {//prev action is notFoundInPool, check time
+              if (now.clone().subtract(rig.pool.on_not_found_in_pool_wait_minutes_before_reset, 'minutes')
+                .isAfter(prevAction.time)) {
+                rig.lastAction = {action: 'reset', reason: 'notFoundInPool'};
+              } else {
+                logger.warn(`rig ${rig.name} is not found in pool, check pool in next round.`);
+              }
+            }
           }
         }
       });
