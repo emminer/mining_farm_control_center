@@ -24,7 +24,7 @@ module.exports = function(pool) {
     return mph_zcoin;
   } else if (pool === 'suprnova_bsd') {
     return suprnova_bsd;
-  } else if (pool === 'yiimp_bsd') {
+  } else if (pool === 'yiimp_bsd' || pool === 'yiimp_lux') {
     return yiimp(pool, 'MH/s');
   } else if (pool === 'ethfans') {
     return ethfans;
