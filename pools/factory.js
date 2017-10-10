@@ -14,9 +14,7 @@ function NotSupported() {
 }
 
 module.exports = function(pool) {
-  if (pool === 'notsupported') {
-    return NotSupported;
-  } else if (pool === 'ethermine') {
+  if (pool === 'ethermine') {
     return ethermine;
   } else if (pool === 'flypool_zcash') {
     return flypool_zcash;
@@ -31,4 +29,6 @@ module.exports = function(pool) {
   } else if (pool === 'ethfans') {
     return ethfans;
   }
+
+  return NotSupported;
 };
