@@ -7,6 +7,7 @@ const suprnova_bsd = require('./suprnova_bsd');
 const suprnova_mona = require('./suprnova_mona');
 const yiimp = require('./yiimp');
 const ethfans = require('./ethfans');
+const f2pool_eth = require('./f2pool_eth');
 
 const PoolError = require('./poolError');
 
@@ -31,6 +32,8 @@ module.exports = function(pool) {
     return yiimp(pool, 'MH/s');
   } else if (pool === 'ethfans') {
     return ethfans;
+  } else if (pool === 'f2pool_eth') {
+    return f2pool_eth;
   }
 
   return NotSupported;
