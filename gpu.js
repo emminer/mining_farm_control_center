@@ -14,7 +14,7 @@ function parseLine(data) {
 
 module.exports = function(rigIp) {
   return ssh(rigIp, 'm1', `nvidia-smi --format=csv,noheader,nounits --query-gpu=${query}`)
-  .then(stdout => {
-    return stdout.split('\n').filter(l => (l.indexOf(',') > 0)).map(parseLine);
-  });
+    .then(stdout => {
+      return stdout.split('\n').filter(l => (l.indexOf(',') > 0)).map(parseLine);
+    });
 };
