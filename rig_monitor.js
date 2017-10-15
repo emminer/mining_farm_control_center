@@ -185,20 +185,18 @@ function checkRigs(checkGpu) {
       if (checkGpu) {
         gpuPromise = Promise.mapSeries(reachable, rig => {
           return gpu(rig.ip).catch((gpuErr) => {
-            if (rig.lastAction.action !== 'reset') {
-              rig.lastAction.action = 'reset';
-              resets.push(rig);
-              if (gpuErr instanceof Promise.TimeoutError) {
-                rig.lastAction.reason = 'nvidia-smi hangs';
-              } else if (gpuErr.code === 'ECONNREFUSED') {
-                rig.lastAction.reason = 'ssh_ECONNREFUSED';
-              } else if (gpuErr.sshExitCode) {
-                rig.lastAction.reason = `nvidia-smi error, code: ${gpuErr.sshExitCode}, stdout: ${gpuErr.stdout}, stderr: ${gpuErr.stderr}`;
-              } else {
-                logger.error('nvidia-smi error, unknown: ', gpuErr);
-                rig.lastAction.reason = 'nvidia-smi error, ' + gpuErr.message;
-              }
+            let nvidia_smi_reason;
+            if (gpuErr instanceof Promise.TimeoutError) {
+              nvidia_smi_reason = 'nvidia-smi hangs';
+            } else if (gpuErr.code === 'ECONNREFUSED') {
+              nvidia_smi_reason = 'ssh_ECONNREFUSED';
+            } else if (gpuErr.sshExitCode) {
+              nvidia_smi_reason = `code: ${gpuErr.sshExitCode}, stdout: ${gpuErr.stdout}, stderr: ${gpuErr.stderr}`;
+            } else {
+              logger.error('nvidia-smi error, unknown: ', gpuErr);
+              nvidia_smi_reason = gpuErr.message;
             }
+            rig.nvidia_smi_error = nvidia_smi_reason;
             return null;
           });
         });
@@ -209,6 +207,7 @@ function checkRigs(checkGpu) {
       return gpuPromise.then(rigsWithGpu => {
         rigsWithGpu.forEach((withGpu, index) => {
           if (withGpu && withGpu !== 'unchanged') {
+            reachable[index].nvidia_smi_error = null;
             reachable[index].gpu = withGpu;
           }
         });
