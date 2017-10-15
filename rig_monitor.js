@@ -88,7 +88,7 @@ function checkRigs(checkGpu) {
         let fromPool = _.find(rigsFromPool, r => r.name === rig.name && r.poolName === rig.pool.name);
         if (fromPool) {
           if (fromPool.poolError) {
-            rig.lastAction = {action: 'recheck_pool_error', reason: fromPool.poolError.message, time: now};
+            rig.lastAction = {action: 'recheck_pool_error', time: now};
           } else if (!fromPool.lastSeen) {
             if (isStarting(rig)){
               rig.lastAction = {action: 'recheck_starting', reason: 'lastSeenNull', time: now};
@@ -310,7 +310,7 @@ function checkPools(rigs){
     let miner = grouped[pool][0].pool.miner;
     let apikey = grouped[pool][0].pool.apikey;
     return poolFactory(pool)(miner, apikey).catch(err => {
-      logger.error(`pool: ${pool}, `, err.message);
+      logger.error(`pool: ${pool}, `, err);
       if (err instanceof PoolError) {
         return grouped[pool].map(r => {
           return {name: r.name, poolName: pool, poolError: err};
