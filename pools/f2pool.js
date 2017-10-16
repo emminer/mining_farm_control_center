@@ -23,7 +23,7 @@ module.exports = function(poolName, unit) {
         rows.each((index, row) => {
           let children = $(row).children();
           let name = children.eq(0).html();
-          let hashrate = children.eq(1).html().split(' ')[0];
+          let hashrate = children.eq(2).html().split(' ')[0];
           hashrate = (hashrate && hashrate !== '-') ? parseFloat(hashrate) : 0;
           let hashrate1d = children.eq(4).html().split(' ')[0];
           hashrate1d = (hashrate1d && hashrate1d !== '-') ? parseFloat(hashrate1d) : 0;
