@@ -5,7 +5,6 @@ if (process.env.MFCC_DRY_RUN === 'true') {
   logger.info('DRY RUN');
 }
 
-const GPIO = require('./rig');
 const fake = {
   startup: function(pin){
     logger.info(`GPIO startups pin ${pin}`);
@@ -29,5 +28,5 @@ module.exports = function() {
   if (process.env.MFCC_DRY_RUN === 'true') {
     return fake;
   }
-  return process.env.NODE_ENV === 'production' ? GPIO : fake;
+  return process.env.NODE_ENV === 'production' ? require('./rig') : fake;
 };
