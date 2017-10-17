@@ -8,6 +8,7 @@ const suprnova_mona = require('./suprnova_mona');
 const yiimp = require('./yiimp');
 const ethfans = require('./ethfans');
 const f2pool_eth = require('./f2pool_eth');
+const nanopool_eth = require('./nanopool_eth');
 
 const PoolError = require('./poolError');
 
@@ -34,6 +35,8 @@ module.exports = function(pool) {
     return ethfans;
   } else if (pool === 'f2pool_eth') {
     return f2pool_eth;
+  } else if (pool === 'nanopool_eth') {
+    return nanopool_eth;
   }
 
   return NotSupported;
