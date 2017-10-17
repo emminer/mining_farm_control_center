@@ -12,7 +12,7 @@ module.exports = function(poolName) {
       const url = `https://api.nanopool.org/v1/${coinname}/user/${miner}`;
       return get(url).then(resp => {
         if (!resp.status || !resp.data) {
-          return [];
+          throw new PoolError(`nanopool error: ${resp.error}`, 500);
         }
         return (resp.data.workers || []).map(worker => {
           return {
