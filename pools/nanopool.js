@@ -9,7 +9,8 @@ module.exports = function(poolName) {
       if (!hashrateHandler) {
         hashrateHandler = o => o;
       }
-      const url = `https://api.nanopool.org/v1/${coinname}/user/${miner}`;
+      let timestamp = moment().unix();
+      const url = `https://api.nanopool.org/v1/${coinname}/user/${miner}?_ts=${timestamp}`;
       return get(url).then(resp => {
         if (!resp.status || !resp.data) {
           throw new PoolError(`nanopool error: ${resp.error}`, 500);
