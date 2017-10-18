@@ -14,8 +14,8 @@ const auth = basicAuth({
 
 function getUnauthorizedResponse(req) {
   return req.auth ?
-      ('Credentials ' + req.auth.user + ':' + req.auth.password + ' rejected') :
-      'No credentials provided';
+    ('Credentials ' + req.auth.user + ':' + req.auth.password + ' rejected') :
+    'No credentials provided';
 }
 
 const monitor = require('../rig_monitor');
@@ -59,7 +59,7 @@ router.post('/rigs/:rigname/reset', auth, function(req, res, next) {
     return res.status(404).send('rig not found.');
   }
 
-  rigAction(res, next, rigGPIO.restart(rig.pin));
+  rigAction(res, next, rigGPIO.restart_try_soft(rig.pin));
 });
 
 router.post('/rigs/:rigname/online', auth, function(req, res, next) {
@@ -95,15 +95,15 @@ router.get('/history', function(req, res, next) {
 function rigAction(res, next, promise) {
   if (monitor.lock()){
     promise
-    .then(() => {
-      res.send('OK');
-    })
-    .catch(err => {
-      next(err);
-    })
-    .finally(() => {
-      monitor.unlock();
-    });
+      .then(() => {
+        res.send('OK');
+      })
+      .catch(err => {
+        next(err);
+      })
+      .finally(() => {
+        monitor.unlock();
+      });
   } else {
     res.status(503).send('Server is busy, try again later.');
   }
