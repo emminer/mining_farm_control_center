@@ -59,7 +59,7 @@ router.post('/rigs/:rigname/reset', auth, function(req, res, next) {
     return res.status(404).send('rig not found.');
   }
 
-  rigAction(res, next, rigGPIO.restart_try_soft(rig.pin));
+  rigAction(res, next, rigGPIO.restart_try_soft(rig.ip, rig.pin));
 });
 
 router.post('/rigs/:rigname/online', auth, function(req, res, next) {
