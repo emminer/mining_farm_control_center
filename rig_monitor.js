@@ -361,7 +361,7 @@ function reportRigsToServer() {
 }
 
 function getDisplayName(rig) {
-  return `rig ${rig.name} ${rig.coin}`;
+  return `rig ${rig.name} ${rig.coin} ${rig.pool.name}`;
 }
 
 module.exports = { RIGS, ACTION_HISTORY, start, checkRigs, exit, lock, unlock };
