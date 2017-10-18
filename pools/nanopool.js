@@ -22,7 +22,7 @@ module.exports = function(poolName) {
             lastSeen: moment.unix(worker.lastShare),
             hashrate: {
               unit,
-              current: worker.hashrate ? hashrateHandler(parseFloat(worker.hashrate)) : 0,
+              current: worker.hashrate ? hashrateHandler(parseFloat(worker.avg_h1)) : 0,
               avg24h: worker.avg_h24 ? hashrateHandler(parseFloat(worker.avg_h24)) : 0,
             },
           };
