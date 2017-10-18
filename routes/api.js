@@ -95,8 +95,8 @@ router.get('/history', function(req, res, next) {
 function rigAction(res, next, promise) {
   if (monitor.lock()){
     promise
-      .then(() => {
-        res.send('OK');
+      .then((result) => {
+        res.send(result);
       })
       .catch(err => {
         next(err);
