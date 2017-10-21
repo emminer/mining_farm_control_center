@@ -19,7 +19,7 @@ module.exports = function(host, user, command) {
   return new Promise((resolve, reject) => {
     ssh.exec(command, {
       exit: (code, stdout, stderr) => {
-        if (code !== 0) {
+        if (!isNaN(code) && code !== 0) {
           let err = new Error(`command ${command} exits with code ${code}`);
           err.sshExitCode = code;
           err.stdout = stdout;
@@ -35,9 +35,9 @@ module.exports = function(host, user, command) {
       }
     });
   })
-  .timeout(RUN_TIMEOUT)
-  .catch(Promise.TimeoutError, (errt) => {
-    ssh.end();
-    throw errt;
-  });
-}
+    .timeout(RUN_TIMEOUT)
+    .catch(Promise.TimeoutError, (errt) => {
+      ssh.end();
+      throw errt;
+    });
+};
