@@ -184,7 +184,7 @@ function checkRigs(checkGpu) {
       let gpuPromise;
       if (checkGpu) {
         gpuPromise = Promise.mapSeries(reachable, rig => {
-          return gpu(rig.ip).catch((gpuErr) => {
+          return gpu(rig).catch((gpuErr) => {
             let nvidia_smi_reason;
             if (gpuErr instanceof Promise.TimeoutError) {
               nvidia_smi_reason = 'nvidia-smi hangs';

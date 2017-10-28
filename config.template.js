@@ -1,5 +1,5 @@
 const suprnova = {
-  miner: 'suprnova_user'
+  miner: 'suprnova_user',
   apikey: 'api_key',
 };
 const miningpoolhub = {
@@ -13,10 +13,10 @@ const report_status_token = 'token';
 const api = {
   user: 'alice',
   password: 'wieru87fsx',
-}
+};
 
 const rigs = [
-  {name: 'nv100', ip: '192.168.1.100', pin: '8', coin: 'ETH', pool: 'ethermine', min_hashrate: 1800, watts: 900},
+  {name: 'nv100', ip: '192.168.1.100', pin: '8', coin: 'ETH', pool: 'ethermine', min_hashrate: 1800, watts: 900, platform: 'linux', gpuType: 'nvidia'},
   {name: 'nv101', ip: '127.0.0.1', pin: '10', coin: 'ETH', pool: 'ethermine', min_hashrate: 180, watts: 1000},
   //{name: 'nv167', ip: '192.168.1.167', pin: '12', coin: 'ETH', pool: 'ethermine', min_hashrate: 190, watts: 1200},
   {name: 'nv129', ip: '10.0.0.129', pin: '3', coin: 'ZEC', pool: 'flypool_zcash', min_hashrate: 1.5, watts: 900},
@@ -28,10 +28,9 @@ const pools = [
   {name: 'suprnova_sigt', miner: suprnova.miner, address: 'stratum+tcp://sigt.suprnova.cc:7106', warm_minutes: 30},
   {name: 'suprnova_lbry', miner: suprnova.miner, address: 'stratum+tcp://lbry.suprnova.cc:6256', warm_minutes: 30},
   {name: 'mph_zcash', miner: miningpoolhub.miner, apikey: miningpoolhub.apikey, address: 'stratum+tcp://hub.miningpoolhub.com:20527', warm_minutes: 40},
-  {name: 'yiimp_bsd', miner: 'i3j8ymbmy58kTAnYyZiwdvLq1wksZHS',
-  address: 'stratum+tcp://yiimp.eu:3739', warm_minutes: 20,
-  on_low_hashrate_wait_minutes_before_reset: 30,
-  on_not_in_pool_wait_minutes_before_reset: 30},
+  {name: 'yiimp_bsd', miner: 'i3j8ymbmy58kTAnYyZiwdvLq1wksZHS', address: 'stratum+tcp://yiimp.eu:3739', warm_minutes: 20,
+    on_low_hashrate_wait_minutes_before_reset: 30,
+    on_not_in_pool_wait_minutes_before_reset: 30},
 ];
 
 //DO NOT EDIT BELOW THIS LINE
@@ -45,7 +44,9 @@ module.exports = {
   rigs: rigs.map(rig => {
     rig.pool = pools.filter(p => p.name === rig.pool)[0];
     rig.status = 'unknown';
+    rig.platform = rig.platform || 'linux';
+    rig.gpuType = rig.gpuType || 'nvidia';
     return rig;
   }),
   pools,
-}
+};

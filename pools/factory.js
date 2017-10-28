@@ -9,6 +9,7 @@ const yiimp = require('./yiimp');
 const ethfans = require('./ethfans');
 const f2pool_eth = require('./f2pool_eth');
 const nanopool_eth = require('./nanopool_eth');
+const supportxmr = require('./supportxmr');
 
 const PoolError = require('./poolError');
 
@@ -37,6 +38,8 @@ module.exports = function(pool) {
     return f2pool_eth;
   } else if (pool === 'nanopool_eth') {
     return nanopool_eth;
+  } else if (pool === 'supportxmr') {
+    return supportxmr(pool, 'kH/s');
   }
 
   return NotSupported;

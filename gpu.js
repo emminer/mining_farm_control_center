@@ -1,4 +1,5 @@
 const ssh = require('./ssh');
+const Promise = require('bluebird');
 
 const query = 'index,temperature.gpu,fan.speed,utilization.gpu';
 
@@ -12,9 +13,13 @@ function parseLine(data) {
   };
 }
 
-module.exports = function(rigIp) {
-  return ssh(rigIp, 'm1', `nvidia-smi --format=csv,noheader,nounits --query-gpu=${query}`)
-    .then(stdout => {
-      return stdout.split('\n').filter(l => (l.indexOf(',') > 0)).map(parseLine);
-    });
+module.exports = function(rig) {
+  if (rig.platform === 'linux' && rig.gpuType === 'nvidia') {
+    return ssh(rig.ip, 'm1', `nvidia-smi --format=csv,noheader,nounits --query-gpu=${query}`)
+      .then(stdout => {
+        return stdout.split('\n').filter(l => (l.indexOf(',') > 0)).map(parseLine);
+      });
+  } else {
+    return Promise.resolve([]);
+  }
 };
