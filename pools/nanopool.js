@@ -19,11 +19,11 @@ module.exports = function(poolName) {
           return {
             name: worker.id,
             poolName,
-            lastSeen: moment.unix(worker.lastShare),
+            lastSeen: moment.unix(worker.lastshare),
             hashrate: {
               unit,
-              current: worker.hashrate ? hashrateHandler(parseFloat(worker.avg_h1)) : 0,
-              avg24h: worker.avg_h24 ? hashrateHandler(parseFloat(worker.avg_h24)) : 0,
+              current: worker.h1 ? hashrateHandler(parseFloat(worker.h1)) : 0,
+              avg24h: worker.h24 ? hashrateHandler(parseFloat(worker.h24)) : 0,
             },
           };
         });
