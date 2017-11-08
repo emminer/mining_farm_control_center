@@ -3,6 +3,7 @@ const path = require('path');
 const fs = require('fs');
 const SSH = require('simple-ssh');
 const Promise = require('bluebird');
+const logger = require('./logger');
 
 const CONNECTION_TIMEOUT = 3000;
 const RUN_TIMEOUT = 5000;
@@ -16,6 +17,11 @@ module.exports = function(host, user, command) {
     key: KEY,
   });
 
+  ssh.on('error', function(err) {
+    logger.error('ssh error, ', err);
+    ssh.end();
+  });
+
   return new Promise((resolve, reject) => {
     ssh.exec(command, {
       exit: (code, stdout, stderr) => {
@@ -26,7 +32,6 @@ module.exports = function(host, user, command) {
           err.stderr = stderr;
           return reject(err);
         }
-
         resolve(stdout);
       },
     }).start({
