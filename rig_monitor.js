@@ -110,14 +110,12 @@ function checkRigs(checkGpu) {
                 }
               }
             }
-          } else if (now.clone().subtract(rig.pool.lastSeen_delay_minutes || 40, 'minutes').isAfter(fromPool.lastSeen)) {
-            if (rig.pool.check_lastSeen !== false) {
-              if (isStarting(rig)){
-                rig.lastAction = {action: 'recheck_starting', reason: 'longTimeNoSee', time: now};
-              } else {
-                logger.info(`rig ${rig.name} longTimeNoSee, last seen:`, fromPool.lastSeen.inspect());
-                rig.lastAction = {action: 'reset', reason: 'longTimeNoSee'};
-              }
+          } else if (rig.pool.check_lastSeen !== false && now.clone().subtract(rig.pool.lastSeen_delay_minutes || 40, 'minutes').isAfter(fromPool.lastSeen)) {
+            if (isStarting(rig)){
+              rig.lastAction = {action: 'recheck_starting', reason: 'longTimeNoSee', time: now};
+            } else {
+              logger.info(`rig ${rig.name} longTimeNoSee, last seen:`, fromPool.lastSeen.inspect());
+              rig.lastAction = {action: 'reset', reason: 'longTimeNoSee'};
             }
           } else if (fromPool.hashrate.current < rig.min_hashrate) {
             rig.lastSeen = fromPool.lastSeen;
