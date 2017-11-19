@@ -2,6 +2,7 @@ const rpio = require('rpio');
 const Promise = require('bluebird');
 const ssh = require('./ssh');
 const logger = require('./logger');
+const config = require('./config');
 
 const shutdown_press_seconds = 5;
 const startup_press_ms = 100;
@@ -33,8 +34,16 @@ function restart(pin) {
   });
 }
 
-function restart_try_soft(ip, pin) {
-  return ssh(ip, 'm1', 'sudo reboot')
+function restart_try_soft(ip, pin, platform, gpuType) {
+  let softRebootPromise;
+  if (platform === 'linux' && gpuType === 'nvidia') {
+    softRebootPromise = ssh(ip, 'm1', 'sudo reboot');
+  } else if (platform === 'windows' && gpuType === 'amd') {
+    softRebootPromise = ssh(ip, config.windows_user, 'shutdown -t 0 -r -f');
+  } else {
+    softRebootPromise = Promise.resolve();
+  }
+  return softRebootPromise
     .then(() => {
       return 'soft';
     })

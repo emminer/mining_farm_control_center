@@ -244,7 +244,7 @@ function checkRigs(checkGpu) {
               },
               reason: rig.lastAction.reason,
             });
-            return rigGPIO.restart_try_soft(rig.ip, rig.pin).then((softOrHard) => {
+            return rigGPIO.restart_try_soft(rig.ip, rig.pin, rig.platform, rig.gpuType).then((softOrHard) => {
               logger.warn(`rig ${rig.name} ${rig.ip} was resetted ${softOrHard}.`);
               rig.startedAt = rig.lastAction.time = moment();
               rig.resettedSoftOrHard = softOrHard;

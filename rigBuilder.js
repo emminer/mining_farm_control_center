@@ -18,8 +18,8 @@ const fake = {
     logger.info(`GPIO restarts pin ${pin}`);
     return Promise.delay(10 * 1000);
   },
-  restart_try_soft: function(ip, pin) {
-    logger.info(`soft reset ip ${ip}, pin ${pin}`);
+  restart_try_soft: function(ip, pin, platform, gpuType) {
+    logger.info(`soft reset ip ${ip}, pin ${pin}, platform ${platform}, gpu ${gpuType}`);
     return Promise.delay(2 * 1000).then(() => 'soft');
   }
 };
