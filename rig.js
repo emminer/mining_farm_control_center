@@ -9,6 +9,9 @@ const startup_press_ms = 100;
 const restart_delay_seconds = 10;
 
 function shutdown(pin, close) {
+  if (pin === '0' || pin === 0) {
+    return Promise.resolve();
+  }
   rpio.open(pin, rpio.OUTPUT, rpio.LOW);
   return Promise.delay(shutdown_press_seconds * 1000).then(() => {
     if (close) {
@@ -20,6 +23,9 @@ function shutdown(pin, close) {
 }
 
 function startup(pin) {
+  if (pin === '0' || pin === 0) {
+    return Promise.resolve();
+  }
   rpio.open(pin, rpio.OUTPUT, rpio.LOW);
   return Promise.delay(startup_press_ms).then(() => {
     rpio.close(pin);
