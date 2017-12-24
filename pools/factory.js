@@ -11,6 +11,7 @@ const f2pool_eth = require('./f2pool_eth');
 const nanopool_eth = require('./nanopool_eth');
 const nanopool_xmr = require('./nanopool_xmr');
 const supportxmr = require('./supportxmr');
+const nicehash = require('./nicehash');
 
 const PoolError = require('./poolError');
 
@@ -43,6 +44,8 @@ module.exports = function(pool) {
     return supportxmr(pool, 'kH/s');
   } else if (pool === 'nanopool_xmr') {
     return nanopool_xmr;
+  } else if (pool === 'nicehash_CryptoNight') {
+    return nicehash('nicehash_CryptoNight')('CryptoNight', 'kH/s');
   }
 
   return NotSupported;
