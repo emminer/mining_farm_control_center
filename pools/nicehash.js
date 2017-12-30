@@ -44,6 +44,8 @@ module.exports = function(poolName) {
 function algo2code(algo) {
   if (algo === 'CryptoNight') {
     return 22;
+  } else if (algo === 'Lyra2REv2') {
+    return 14;
   }
 
   return 0;
