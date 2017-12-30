@@ -46,6 +46,8 @@ module.exports = function(pool) {
     return nanopool_xmr;
   } else if (pool === 'nicehash_CryptoNight') {
     return nicehash('nicehash_CryptoNight')('CryptoNight', 'kH/s');
+  } else if (pool === 'nicehash_Lyra2REv2') {
+    return nicehash('nicehash_Lyra2REv2')('Lyra2REv2', 'MH/s');
   }
 
   return NotSupported;
