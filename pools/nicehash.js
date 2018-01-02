@@ -46,6 +46,8 @@ function algo2code(algo) {
     return 22;
   } else if (algo === 'Lyra2REv2') {
     return 14;
+  } else if (algo === 'NeoScrypt') {
+    return 8;
   }
 
   return 0;
