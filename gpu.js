@@ -2,7 +2,7 @@ const ssh = require('./ssh');
 const Promise = require('bluebird');
 const config = require('./config');
 
-const query = 'index,temperature.gpu,fan.speed,utilization.gpu';
+const NVIDIA_QUERY = 'index,temperature.gpu,fan.speed,utilization.gpu';
 
 function parseLineLinuxNvidia(data) {
   const arr = data.split(',');
@@ -25,8 +25,9 @@ function parseLineWindowsAmd(data) {
 }
 
 module.exports = function(rig) {
-  if (rig.platform === 'linux' && rig.gpuType === 'nvidia') {
-    return ssh(rig.ip, 'm1', `nvidia-smi --format=csv,noheader,nounits --query-gpu=${query}`)
+  if (rig.gpuType === 'nvidia') {
+    let rigUser = rig.platform === 'linux' ? 'm1' : config.windows_user;
+    return ssh(rig.ip, rigUser, `nvidia-smi --format=csv,noheader,nounits --query-gpu=${NVIDIA_QUERY}`)
       .then(stdout => {
         return stdout.split('\n').filter(l => (l.indexOf(',') > 0)).map(parseLineLinuxNvidia);
       });
