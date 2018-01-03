@@ -48,6 +48,8 @@ function algo2code(algo) {
     return 14;
   } else if (algo === 'NeoScrypt') {
     return 8;
+  } else if (algo === 'Nist5') {
+    return 7;
   }
 
   return 0;

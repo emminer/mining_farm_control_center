@@ -50,6 +50,8 @@ module.exports = function(pool) {
     return nicehash('nicehash_Lyra2REv2')('Lyra2REv2', 'MH/s');
   } else if (pool === 'nicehash_NeoScrypt') {
     return nicehash('nicehash_NeoScrypt')('NeoScrypt', 'MH/s');
+  } else if (pool === 'nicehash_Nist5') {
+    return nicehash('nicehash_Nist5')('Nist5', 'MH/s');
   }
 
   return NotSupported;
