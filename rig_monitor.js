@@ -362,7 +362,11 @@ function reportRigsToServer() {
 }
 
 function getDisplayName(rig) {
-  return `rig ${rig.name} ${rig.coin} ${rig.pool.name}`;
+  let coin = rig.coin;
+  if (coin === 'auto' && rig.algo) {
+    coin = rig.algo;
+  }
+  return `rig ${rig.name} ${coin} ${rig.pool.name}`;
 }
 
 module.exports = { RIGS, ACTION_HISTORY, start, checkRigs, exit, lock, unlock };
