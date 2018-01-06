@@ -11,7 +11,10 @@ module.exports = function(poolName) {
       }
       let timestamp = moment().unix();
       let algoCode = algo2code(algo);
-      const url = `https://api.nicehash.com/api?method=stats.provider.workers&addr=${miner}&algo=${algoCode}&_ts=${timestamp}`;
+      let url = `https://api.nicehash.com/api?method=stats.provider.workers&addr=${miner}&_ts=${timestamp}`;
+      if (algoCode !== -1) {
+        url += `&algo=${algoCode}`;
+      }
 
       return get(url).then(resp => {
         if (!resp.result) {
@@ -23,6 +26,7 @@ module.exports = function(poolName) {
         return (resp.result.workers || []).map(worker => {
           return {
             name: worker[0],
+            algo: code2algo(worker[worker.length - 1]),
             poolName,
             lastSeen: moment(),
             hashrate: {
@@ -42,15 +46,54 @@ module.exports = function(poolName) {
 };
 
 function algo2code(algo) {
-  if (algo === 'CryptoNight') {
-    return 22;
-  } else if (algo === 'Lyra2REv2') {
-    return 14;
-  } else if (algo === 'NeoScrypt') {
-    return 8;
-  } else if (algo === 'Nist5') {
-    return 7;
+  for (const pair of NICEHASH_ALGO_MAP) {
+    if (pair[1] === algo) {
+      return pair[0];
+    }
   }
 
-  return 0;
+  return -1;
 }
+
+function code2algo(code) {
+  for (const pair of NICEHASH_ALGO_MAP) {
+    if (pair[0] === code) {
+      return pair[1];
+    }
+  }
+
+  return 'unknown';
+}
+
+const NICEHASH_ALGO_MAP = [
+  [0, 'Scrypt'],
+  [1, 'SHA256'],
+  [2, 'ScryptNf'],
+  [3, 'X11'],
+  [4, 'X13'],
+  [5, 'Keccak'],
+  [6, 'X15'],
+  [7, 'Nist5'],
+  [8, 'NeoScrypt'],
+  [9, 'Lyra2RE'],
+  [10, 'WhirlpoolX'],
+  [11, 'Qubit'],
+  [12, 'Quark'],
+  [13, 'Axiom'],
+  [14, 'Lyra2REv2'],
+  [15, 'ScryptJaneNf16'],
+  [16, 'Blake256r8'],
+  [17, 'Blake256r14'],
+  [18, 'Blake256r8vnl'],
+  [19, 'Hodl'],
+  [20, 'DaggerHashimoto'],
+  [21, 'Decred'],
+  [22, 'CryptoNight'],
+  [23, 'Lbry'],
+  [24, 'Equihash'],
+  [25, 'Pascal'],
+  [26, 'X11Gost'],
+  [27, 'Sia'],
+  [28, 'Blake2s'],
+  [29, 'Skunk'],
+];

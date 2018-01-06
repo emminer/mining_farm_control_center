@@ -141,6 +141,7 @@ function checkRigs(checkGpu) {
               }
             }
           } else {
+            rig.algo = fromPool.algo;
             rig.hashrate = fromPool.hashrate;
             rig.lastSeen = fromPool.lastSeen;
             rig.lastAction = {action: 'continue', time: now};
