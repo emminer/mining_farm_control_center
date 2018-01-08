@@ -6,6 +6,9 @@ const PoolError = require('./poolError');
 module.exports = function(poolName) {
   return function(coinname, unit, hashrateHandler){
     return function(user, apikey) {
+      if (!hashrateHandler) {
+        hashrateHandler = o => o;
+      }
       let timestamp = moment().unix();
       let host;
       if (poolName.startsWith('mph')) {
