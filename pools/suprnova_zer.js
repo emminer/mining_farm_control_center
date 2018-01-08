@@ -1,3 +1,3 @@
 const builder = require('./mph_suprnova');
 
-module.exports = builder('suprnova_zer')('zer', 'H/s');
+module.exports = builder('suprnova_zer')('zero', 'H/s');
