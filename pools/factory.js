@@ -14,6 +14,7 @@ const supportxmr = require('./supportxmr');
 const nicehash = require('./nicehash');
 const suprnova_zer = require('./suprnova_zer');
 const ahashpool = require('./ahashpool');
+const protopool = require('./protopool');
 
 const PoolError = require('./poolError');
 
@@ -38,6 +39,8 @@ module.exports = function(pool) {
     return suprnova_zer;
   } else if (pool === 'yiimp_bsd' || pool === 'yiimp_lux') {
     return yiimp(pool, 'MH/s');
+  } else if (pool === 'protopool_liz') {
+    return protopool(pool, 'Gh/s');
   } else if (pool.startsWith('ahashpool')) {
     return ahashpool(pool, 'MH/s');
   } else if (pool === 'ethfans') {
