@@ -36,7 +36,6 @@ module.exports = function(poolName, unit) {
             }
           });
         });
-        console.dir(rigs)
       } catch(parseErr) {
         logger.error(parseErr);
         logger.info('protopool html:', body);
