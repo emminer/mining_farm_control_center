@@ -64,6 +64,8 @@ module.exports = function(pool) {
     return nicehash('nicehash_NeoScrypt')('NeoScrypt', 'MH/s');
   } else if (pool === 'nicehash_Nist5') {
     return nicehash('nicehash_Nist5')('Nist5', 'MH/s');
+  } else if (pool === 'nicehash_Equihash') {
+    return nicehash('nicehash_Equihash')('Equihash', 'kH/s');
   } else if (pool === 'nicehash_auto_switch') {
     return nicehash('nicehash_auto_switch')('auto', 'auto');
   }
