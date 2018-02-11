@@ -21,7 +21,7 @@ const beepool = require('./beepool');
 const PoolError = require('./poolError');
 
 function NotSupported() {
-  return Promise.reject(new PoolError('Pool is not supported yet.', 404));
+  return Promise.reject(new PoolError('Pool is not supported yet.', 404, null, true));
 }
 
 module.exports = function(pool) {

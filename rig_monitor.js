@@ -311,7 +311,11 @@ function checkPools(rigs){
     let miner = grouped[pool][0].pool.miner;
     let apikey = grouped[pool][0].pool.apikey;
     return poolFactory(pool)(miner, apikey).catch(err => {
-      logger.error(`pool: ${pool}, `, err);
+      if (err.isNotSupported) {
+        logger.info(`${pool.name} is not supported.`);
+      } else {
+        logger.error(`pool: ${pool}, `, err);
+      }
       if (err instanceof PoolError) {
         return grouped[pool].map(r => {
           return {name: r.name, poolName: pool, poolError: err};

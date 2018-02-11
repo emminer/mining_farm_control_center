@@ -1,5 +1,5 @@
 class PoolError extends Error {
-  constructor(message, statusCode, error) {
+  constructor(message, statusCode, error, isNotSupported) {
     super();
     Error.captureStackTrace(this, this.constructor);
     this.name = this.constructor.name;
@@ -7,6 +7,7 @@ class PoolError extends Error {
     this.status = statusCode;
     this.networkError = statusCode ? false : true;
     this.error = error;
+    this.isNotSupported = !!isNotSupported;
   }
 
   static NetworkError(message) {
