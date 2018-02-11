@@ -16,6 +16,7 @@ const suprnova_zer = require('./suprnova_zer');
 const ahashpool = require('./ahashpool');
 const protopool = require('./protopool');
 const suprnova_race = require('./suprnova_race');
+const beepool = require('./beepool');
 
 const PoolError = require('./poolError');
 
@@ -68,6 +69,8 @@ module.exports = function(pool) {
     return nicehash('nicehash_Equihash')('Equihash', 'H/s');
   } else if (pool === 'nicehash_auto_switch') {
     return nicehash('nicehash_auto_switch')('auto', 'auto');
+  } else if (pool === 'beepool_bcx') {
+    return beepool(pool, 'GH/s', 'bcx');
   }
 
   return NotSupported;
