@@ -312,7 +312,7 @@ function checkPools(rigs){
     let apikey = grouped[pool][0].pool.apikey;
     return poolFactory(pool)(miner, apikey).catch(err => {
       if (err.isNotSupported) {
-        logger.info(`${pool.name} is not supported.`);
+        logger.info(`${pool} is not supported.`);
       } else {
         logger.error(`pool: ${pool}, `, err);
       }
