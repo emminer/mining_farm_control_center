@@ -18,6 +18,7 @@ const ahashpool = require('./ahashpool');
 const protopool = require('./protopool');
 const suprnova_race = require('./suprnova_race');
 const beepool = require('./beepool');
+const bsod = require('./bsod');
 
 const PoolError = require('./poolError');
 
@@ -74,6 +75,8 @@ module.exports = function(pool) {
     return nicehash('nicehash_auto_switch')('auto', 'auto');
   } else if (pool === 'beepool_bcx') {
     return beepool(pool, 'GH/s', 'bcx');
+  } else if (pool === 'bsod_MLM') {
+    return bsod('bsod_MLM', 'MLM')
   }
 
   return NotSupported;
