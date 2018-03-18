@@ -79,7 +79,7 @@ module.exports = function(pool) {
   } else if (pool === 'beepool_bcx') {
     return beepool(pool, 'GH/s', 'bcx');
   } else if (pool === 'bsod_MLM') {
-    return bsod('bsod_MLM', 'MLM')
+    return bsod('bsod_MLM', 'MLM');
   }
 
   return NotSupported;
