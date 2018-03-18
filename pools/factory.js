@@ -4,6 +4,7 @@ const flypool_zcash = require('./flypool_zcash');
 const mph_zcash = require('./mph_zcash');
 const mph_zcoin = require('./mph_zcoin');
 const mph_zclassic = require('./mph_zclassic');
+const mph_zen = require('./mph_zen');
 const suprnova_bsd = require('./suprnova_bsd');
 const suprnova_mona = require('./suprnova_mona');
 const yiimp = require('./yiimp');
@@ -37,6 +38,8 @@ module.exports = function(pool) {
     return mph_zcoin;
   } else if (pool === 'mph_zclassic') {
     return mph_zclassic;
+  } else if (pool === 'mph_zen') {
+    return mph_zen;
   } else if (pool === 'suprnova_bsd') {
     return suprnova_bsd;
   } else if (pool === 'suprnova_mona') {
