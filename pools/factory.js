@@ -7,6 +7,7 @@ const mph_zclassic = require('./mph_zclassic');
 const mph_zen = require('./mph_zen');
 const suprnova_bsd = require('./suprnova_bsd');
 const suprnova_mona = require('./suprnova_mona');
+const suprnova_zen = require('./suprnova_zen');
 const yiimp = require('./yiimp');
 const ethfans = require('./ethfans');
 const f2pool_eth = require('./f2pool_eth');
@@ -46,6 +47,8 @@ module.exports = function(pool) {
     return suprnova_mona;
   } else if (pool === 'suprnova_zer') {
     return suprnova_zer;
+  } else if (pool === 'suprnova_zen') {
+    return suprnova_zen;
   } else if (pool === 'suprnova_race') {
     return suprnova_race;
   } else if (pool === 'yiimp_bsd' || pool === 'yiimp_lux') {
